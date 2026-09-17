@@ -12,7 +12,7 @@ dependencies = ["pandas", "numpy", "scikit-learn", "scipy"]
 [project.optional-dependencies]
 providers = ["openai", "anthropic", "python-dotenv", "requests", "tqdm"]
 analysis = ["matplotlib", "seaborn", "torch"]
-datasets = ["datasets", "scikit-learn"]
+datasets = ["datasets", "scikit-learn", "scikit-multilearn", "pyarrow"]
 notebooks = ["jupyterlab"]
 
 [project.scripts]

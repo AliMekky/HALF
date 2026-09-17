@@ -1,0 +1,5 @@
+{
+  "input_path": "my-study/translation-judge-responses.jsonl",
+  "gold_csv": "my-study/translation-gold.csv",
+  "output_path": "runs/translation/scores.csv"
+}

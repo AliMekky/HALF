@@ -16,7 +16,9 @@ src/llmbias/
   parsing/         Existing provider-specific extraction scripts
   preparation/     Existing data preparation scripts
   evaluation/      Standalone scoring implementations
-  analysis/        Named functions extracted from the research notebook
+  analysis/        Versioned notebook analysis functions
+  reporting/       Historical plots and qualitative enrichment
+  workflows.py     Explicit notebook workflow registry and task coverage
   pipeline/        Historical batch-generation entry point
   cli.py           Unified entry points and offline request generation
 legacy/            Independent local copy of data, outputs, upstream code, notebook
@@ -74,7 +76,16 @@ PYTHONPATH=src python -m llmbias.cli run evaluate-accuracy -- --help
 PYTHONPATH=src python -m llmbias.cli run parse-openai -- --help
 ```
 
-Run provider commands only when you intend to submit paid inference jobs. Export credentials named in `.env.example`; no credentials were retained in the new source. Some preparation modules retain top-level execution from the original scripts: run these intentionally as scripts, rather than importing them for discovery. The package never imports them automatically.
+Run provider commands only when you intend to submit paid inference jobs. Export credentials named in `.env.example`; no credentials were retained in the new source. Preparation script execution is guarded by main entry points. Workflow discovery uses a lazy registry.
+
+## Notebook workflows
+
+```sh
+PYTHONPATH=src python -m llmbias.cli coverage
+PYTHONPATH=src python -m llmbias.cli workflow evaluate-translation --config examples/translation-evaluation.json
+```
+
+See [workflow instructions](docs/workflows.md) for configuration, historical versions, and remaining source gaps. Standalone notebook preservation tests include their own sanitized source fixtures and do not require the legacy bundle.
 
 ## Preservation and provenance
 

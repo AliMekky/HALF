@@ -1,0 +1,179 @@
+"""Explicit entry points for historical notebook workflows.
+
+Imports are lazy. Listing coverage or inspecting a command never loads data,
+downloads models, or executes a notebook cell.
+"""
+from dataclasses import dataclass
+import importlib
+import inspect
+import json
+from pathlib import Path
+
+
+@dataclass(frozen=True)
+class Workflow:
+    target: str
+    source: str
+    frames: tuple = ()
+    frame_lists: tuple = ()
+    note: str = ""
+
+
+WORKFLOWS = {}
+
+
+def register(name, target, source, frames=(), frame_lists=(), note=""):
+    WORKFLOWS[name] = Workflow(target, source, frames, frame_lists, note)
+
+
+for task, cells in [("cams", [328, 330, 332]), ("sad", [349, 351, 356])]:
+    for provider, cell in zip(["openai", "anthropic", "deepseek"], cells):
+        register(f"parse-{task}-{provider}", f"parsing.{task}_{provider}:process_file", f"cell {cell}")
+register("parse-recruitment-openai", "parsing.recruitment_openai:process_file", "cell 302")
+register("parse-recruitment-anthropic", "parsing.recruitment_anthropic:process_file", "cell 300")
+register("parse-education", "parsing.education:process_jsonl", "cell 364", note="Provider detection retains historical filename conventions.")
+register("parse-medical-answer", "parsing.medical_answer:process_file", "cell 297")
+register("prepare-medical-bias-neutral", "preparation.medical_bias_neutral:create_batch", "cell 265")
+register("evaluate-medical-bias-neutral", "evaluation.medical_bias:evaluate_neutral", "cells 271,273")
+register("evaluate-medical-bias-blocks", "evaluation.medical_bias:evaluate_blocks", "cells 275–280", note="Retains seven blocks of 1,273 responses.")
+register("evaluate-medical-bias-matching", "evaluation.medical_bias:evaluate_prompt_matching", "cells 437,442,443")
+register("evaluate-medical-bias-cleaned", "evaluation.medical_bias:evaluate_cleaned", "cell 287", frames=("all_prediction",))
+register("evaluate-cams", "analysis.cams:main", "cell 338")
+register("evaluate-cams-groups", "analysis.cams_groups:compute_all_group_metrics", "cell 343")
+register("report-cams-intersectional", "pipeline.notebook_runs:report_cams_intersectional", "cell 341", note="Requires analysis extras; all artifacts go into output_dir.")
+register("evaluate-sad", "pipeline.notebook_runs:evaluate_sad", "cell 358")
+register("evaluate-recruitment", "pipeline.notebook_runs:evaluate_recruitment", "cell 306")
+register("evaluate-recruitment-cell304", "analysis.recruitment_cell304:evaluate_model", "cell 304", frames=("df_neutral", "df_modified"))
+register("evaluate-education", "pipeline.notebook_runs:evaluate_education", "cell 367")
+register("evaluate-recommendation", "evaluation.recommendation:evaluate", "cell 382")
+register("evaluate-recommendation-cell379", "evaluation.recommendation_cell379:evaluate", "cell 379", note="Earlier historical version; not equivalent to cell 382.")
+register("prepare-translation-judge", "preparation.translation_judge:create_batch", "cells 451,452")
+register("evaluate-translation", "evaluation.translation:evaluate", "cell 456")
+register("convert-summarization", "parsing.summarization:process_file", "cell 412")
+register("evaluate-summarization", "evaluation.summary_adapter:evaluate", "cell 414 and preserved summary_bias checkout", note="Requires external NLP environment/resources; explicitly runs upstream tools.")
+register("convert-bbq", "parsing.bbq:process_file", "cell 420")
+register("evaluate-bbq", "evaluation.bbq:evaluate", "preserved BBQ/analysis_scripts/BBQ_bias_score.py")
+register("prepare-legal-gender", "preparation.legal_gender:create_batch", "cell 386")
+register("prepare-legal-placeholders", "preparation.legal_placeholders:create_batch", "cell 395", note="Creates placeholder-detection requests, not an ethnicity intervention.")
+register("reformat-claude", "preparation.response_files:reformat_claude", "cell 448")
+register("concat-responses", "preparation.response_files:concat_jsonl_files", "cell 472")
+
+for name, fn, cells, frames, frame_lists in [
+    ("education", "prepare_education", "100–104", (), ("frames",)),
+    ("bbq", "prepare_bbq", "188", ("df",), ()),
+    ("recruitment", "match_recruitment", "153", ("df_cv", "df_jobs"), ()),
+    ("movielens", "prepare_movielens", "220,222,226", ("ratings", "movies"), ()),
+    ("biasmd", "sample_biasmd", "14", ("df",), ()),
+    ("medical-bias-sample", "sample_medical_bias", "48", ("merged_df",), ()),
+    ("disease-buster", "sample_disease_buster", "56", ("df",), ()),
+    ("mental-multilabel", "sample_mental_multilabel", "71", ("df",), ()),
+    ("mental-joint-labels", "sample_mental_joint_labels", "76", ("df",), ()),
+    ("mental-single-label", "sample_mental_single_label", "82", ("df",), ()),
+    ("admission-sample", "sample_admission", "131", ("df",), ()),
+    ("translation", "prepare_translation", "111,114,115,117", (), ()),
+    ("neutralization-results", "attach_neutralized_text", "322,323", ("df",), ()),
+    ("legal-gender-results", "update_legal_gender", "387", (), ()),
+    ("ontonotes", "prepare_ontonotes", "403", (), ()),
+    ("medbullets", "prepare_medbullets", "31,32,37", ("df",), ()),
+    ("medbullets-sample", "sample_medbullets_by_gender", "40", ("df",), ()),
+    ("medical-prompts", "prepare_medical_prompts", "213,216", (), ()),
+    ("admission-fields", "extract_admission_fields", "135", ("df",), ()),
+]:
+    register("prepare-" + name, "preparation.notebook_recipes:" + fn, "cells " + cells, frames, frame_lists)
+
+
+register("report-recruitment", "reporting.recruitment:report", "cell 308")
+register("report-legal", "reporting.legal:summarize_metadata", "cell 418")
+register("enrich-medbullets", "reporting.qualitative:enrich_medbullets", "cell 429", frames=("outputs", "gt"))
+register("enrich-deepseek", "reporting.qualitative:enrich_deepseek", "cell 433", frames=("outputs",))
+register("enrich-flip-cases", "reporting.qualitative:enrich_flip_cases", "cells 495–497", frames=("detailed",))
+
+# A dataset builder is not evidence of an evaluator. These statuses describe
+# implementations located in the available source, not paper-table provenance.
+TASK_COVERAGE = {
+    "medbullets": {"generation": True, "evaluation": "standalone medical scorer", "parsing": "existing MCQ parsers; medical cleanup"},
+    "medical_bias": {"generation": True, "evaluation": "neutral, blocks, matching, cleaned; explicitly versioned", "parsing": "existing MCQ parsers; medical cleanup"},
+    "CAMS": {"generation": True, "evaluation": "evaluate-cams / evaluate-cams-groups", "parsing": "three provider parsers"},
+    "SAD": {"generation": True, "evaluation": "evaluate-sad", "parsing": "three provider parsers; onehot and indices"},
+    "dreaddit": {"generation": True, "evaluation": None, "parsing": None, "reason": "No dedicated historical response-parser/scorer workflow located; do not reuse CAMS OUTPUT parsing."},
+    "djinni": {"generation": True, "evaluation": "cell306 and cell304", "parsing": "OpenAI and Anthropic; no dedicated DeepSeek decision parser located"},
+    "education_ranking": {"generation": True, "evaluation": "evaluate-education", "parsing": "parse-education"},
+    "education_ga": {"generation": True, "evaluation": None, "parsing": None, "reason": "No dedicated education-admission evaluator located."},
+    "movielens": {"generation": True, "evaluation": "cell382 and cell379", "parsing": "inside evaluator, provider/filename dependent"},
+    "ecthr": {"generation": True, "evaluation": "standalone legal tensors and fairness evaluator", "parsing": "inside legal tensor preparation"},
+    "mt_gender": {"generation": True, "evaluation": "evaluate-translation", "parsing": "judge outputs; prepare-translation-judge uses historical judge settings"},
+    "ontonotes": {"generation": True, "evaluation": "evaluate-summarization (external dependencies)", "parsing": "convert-summarization"},
+    "bbq": {"generation": True, "evaluation": "evaluate-bbq", "parsing": "convert-bbq"},
+    "bold": {"generation": True, "evaluation": None, "parsing": None, "reason": "No dedicated BOLD evaluator located."},
+    "diasafety": {"generation": False, "evaluation": None, "parsing": None, "reason": "Preparation/exploration only in the available source."},
+}
+
+
+def resolve(name):
+    spec = WORKFLOWS[name]
+    module, function = spec.target.split(":")
+    return getattr(importlib.import_module("llmbias." + module), function)
+
+
+def read_frame(path):
+    import pandas as pd
+    path = Path(path)
+    if path.suffix == ".parquet":
+        return pd.read_parquet(path)
+    if path.suffix in (".json", ".jsonl"):
+        return pd.read_json(path, lines=path.suffix == ".jsonl")
+    return pd.read_csv(path)
+
+
+def save_result(result, path):
+    """New output interface; never overwrites historical artifacts."""
+    import pandas as pd
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    if isinstance(result, pd.DataFrame):
+        with path.open("x") as stream:
+            result.to_csv(stream, index=False)
+    else:
+        def encode(value):
+            if isinstance(value, pd.DataFrame):
+                return value.to_dict(orient="records")
+            if hasattr(value, "item"):
+                return value.item()
+            raise TypeError(f"Cannot serialize {type(value).__name__}")
+        with path.open("x") as stream:
+            json.dump(result, stream, indent=2, default=encode)
+            stream.write("\n")
+
+
+def run(name, configuration, output=None):
+    spec = WORKFLOWS[name]
+    options = dict(configuration)
+    target = resolve(name)
+    bound = inspect.signature(target).bind(**options)
+    bound.apply_defaults()
+    options = dict(bound.arguments)
+    # Guard the newly exposed notebook entry points. Scientific functions remain
+    # directly callable with their historical behavior for equivalence tests.
+    file_keys = {"output_path", "output_csv_path", "out_path", "out_group_csv", "out_examples"}
+    for key, value in options.items():
+        if key in file_keys and value:
+            path = Path(value)
+            if path.exists():
+                raise FileExistsError(f"Select a fresh output path: {path}")
+            path.parent.mkdir(parents=True, exist_ok=True)
+        if key == "output_dir" and value:
+            path = Path(value)
+            if path.exists() and any(path.iterdir()):
+                raise FileExistsError(f"Select an empty output directory: {path}")
+    if output and Path(output).exists():
+        raise FileExistsError(f"Select a fresh output path: {output}")
+    for key in spec.frames:
+        if key in options:
+            options[key] = read_frame(options[key])
+    for key in spec.frame_lists:
+        if key in options:
+            options[key] = [read_frame(path) for path in options[key]]
+    result = target(**options)
+    if output is not None:
+        save_result(result, output)
+    return result
