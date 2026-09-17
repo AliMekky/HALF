@@ -1,0 +1,407 @@
+[
+  {
+    "source": "experiments/prompts.py",
+    "target": "src/llmbias/prompts.py",
+    "operation": "move; imports, paths, authentication wiring only"
+  },
+  {
+    "source": "experiments/utils.py",
+    "symbol": "create_mental_health_template",
+    "target": "src/llmbias/tasks/mental_health.py",
+    "operation": "verbatim function extraction"
+  },
+  {
+    "source": "experiments/utils.py",
+    "symbol": "create_med_bullets_template",
+    "target": "src/llmbias/tasks/medical.py",
+    "operation": "verbatim function extraction"
+  },
+  {
+    "source": "experiments/utils.py",
+    "symbol": "create_medical_bias_template",
+    "target": "src/llmbias/tasks/medical.py",
+    "operation": "verbatim function extraction"
+  },
+  {
+    "source": "experiments/utils.py",
+    "symbol": "create_rec_system_template",
+    "target": "src/llmbias/tasks/recommendation.py",
+    "operation": "verbatim function extraction"
+  },
+  {
+    "source": "experiments/utils.py",
+    "symbol": "create_djinni_template",
+    "target": "src/llmbias/tasks/recruitment.py",
+    "operation": "verbatim function extraction"
+  },
+  {
+    "source": "experiments/utils.py",
+    "symbol": "create_education_template",
+    "target": "src/llmbias/tasks/education.py",
+    "operation": "verbatim function extraction"
+  },
+  {
+    "source": "experiments/utils.py",
+    "symbol": "create_education_admission_template",
+    "target": "src/llmbias/tasks/education.py",
+    "operation": "verbatim function extraction"
+  },
+  {
+    "source": "experiments/utils.py",
+    "symbol": "create_translation_template",
+    "target": "src/llmbias/tasks/translation.py",
+    "operation": "verbatim function extraction"
+  },
+  {
+    "source": "experiments/utils.py",
+    "symbol": "create_ecthr_template",
+    "target": "src/llmbias/tasks/legal.py",
+    "operation": "verbatim function extraction"
+  },
+  {
+    "source": "experiments/utils.py",
+    "symbol": "create_ontonotes_template",
+    "target": "src/llmbias/tasks/summarization.py",
+    "operation": "verbatim function extraction"
+  },
+  {
+    "source": "experiments/utils.py",
+    "symbol": "create_bold_template",
+    "target": "src/llmbias/tasks/conversational.py",
+    "operation": "verbatim function extraction"
+  },
+  {
+    "source": "experiments/utils.py",
+    "symbol": "create_bbq_template",
+    "target": "src/llmbias/tasks/conversational.py",
+    "operation": "verbatim function extraction"
+  },
+  {
+    "source": "experiments/create_batch_file.py",
+    "target": "src/llmbias/pipeline/create_batch.py",
+    "operation": "move; imports, paths, authentication wiring only"
+  },
+  {
+    "source": "experiments/submit_batch.py",
+    "target": "src/llmbias/providers/openai_batch.py",
+    "operation": "move; imports, paths, authentication wiring only"
+  },
+  {
+    "source": "experiments/submit_batch_deepinfra.py",
+    "target": "src/llmbias/providers/deepinfra.py",
+    "operation": "move; imports, paths, authentication wiring only"
+  },
+  {
+    "source": "experiments/submit_requests_claude.py",
+    "target": "src/llmbias/providers/anthropic_batch.py",
+    "operation": "move; imports, paths, authentication wiring only"
+  },
+  {
+    "source": "experiments/submit_requests_deepseek.py",
+    "target": "src/llmbias/providers/deepseek.py",
+    "operation": "move; imports, paths, authentication wiring only"
+  },
+  {
+    "source": "experiments/extract_data_claude.py",
+    "target": "src/llmbias/parsing/claude_mcq.py",
+    "operation": "move; imports, paths, authentication wiring only"
+  },
+  {
+    "source": "experiments/extract_mcq_answers_openai.py",
+    "target": "src/llmbias/parsing/openai_mcq.py",
+    "operation": "move; imports, paths, authentication wiring only"
+  },
+  {
+    "source": "experiments/extract_mcq_answer_deepseek.py",
+    "target": "src/llmbias/parsing/deepseek_mcq.py",
+    "operation": "move; imports, paths, authentication wiring only"
+  },
+  {
+    "source": "experiments/evaluate_2.py",
+    "target": "src/llmbias/evaluation/accuracy.py",
+    "operation": "move; imports, paths, authentication wiring only"
+  },
+  {
+    "source": "experiments/medical_data/evaluate.py",
+    "target": "src/llmbias/evaluation/medical.py",
+    "operation": "move; imports, paths, authentication wiring only"
+  },
+  {
+    "source": "experiments/legal_data/evaluation/run_eval.py",
+    "target": "src/llmbias/evaluation/legal.py",
+    "operation": "move; imports, paths, authentication wiring only"
+  },
+  {
+    "source": "experiments/legal_data/evaluation/prep_ecthr_tensors.py",
+    "target": "src/llmbias/evaluation/legal_tensors.py",
+    "operation": "move; imports, paths, authentication wiring only"
+  },
+  {
+    "source": "experiments/summarization_data/evaluation/merge_summaries.py",
+    "target": "src/llmbias/evaluation/summarization.py",
+    "operation": "move; imports, paths, authentication wiring only"
+  },
+  {
+    "source": "experiments/translation_data/build_format.py",
+    "target": "src/llmbias/preparation/translation.py",
+    "operation": "move; imports, paths, authentication wiring only"
+  },
+  {
+    "source": "experiments/neutralize_text.py",
+    "target": "src/llmbias/preparation/neutralization.py",
+    "operation": "move; imports, paths, authentication wiring only"
+  },
+  {
+    "source": "legal_data/load_dataset.py",
+    "target": "src/llmbias/preparation/legal_loading.py",
+    "operation": "move; imports, paths, authentication wiring only"
+  },
+  {
+    "source": "legal_data/process_dataset_legal.py",
+    "target": "src/llmbias/preparation/legal_sampling.py",
+    "operation": "move; imports, paths, authentication wiring only"
+  },
+  {
+    "source": "conv_ai/diasafety.py",
+    "target": "src/llmbias/preparation/diasafety.py",
+    "operation": "move; imports, paths, authentication wiring only"
+  },
+  {
+    "source": "data_analysis.ipynb",
+    "cell": 306,
+    "symbol": "admit_bool",
+    "target": "src/llmbias/analysis/recruitment.py",
+    "operation": "verbatim function extraction; paths relocated"
+  },
+  {
+    "source": "data_analysis.ipynb",
+    "cell": 306,
+    "symbol": "load_model_data",
+    "target": "src/llmbias/analysis/recruitment.py",
+    "operation": "verbatim function extraction; paths relocated"
+  },
+  {
+    "source": "data_analysis.ipynb",
+    "cell": 306,
+    "symbol": "add_reference_columns",
+    "target": "src/llmbias/analysis/recruitment.py",
+    "operation": "verbatim function extraction; paths relocated"
+  },
+  {
+    "source": "data_analysis.ipynb",
+    "cell": 306,
+    "symbol": "summarise",
+    "target": "src/llmbias/analysis/recruitment.py",
+    "operation": "verbatim function extraction; paths relocated"
+  },
+  {
+    "source": "data_analysis.ipynb",
+    "cell": 306,
+    "symbol": "evaluate_model",
+    "target": "src/llmbias/analysis/recruitment.py",
+    "operation": "verbatim function extraction; paths relocated"
+  },
+  {
+    "source": "data_analysis.ipynb",
+    "cell": 306,
+    "symbol": "main",
+    "target": "src/llmbias/analysis/recruitment.py",
+    "operation": "verbatim function extraction; paths relocated"
+  },
+  {
+    "source": "data_analysis.ipynb",
+    "cell": 338,
+    "symbol": "equalized_odds_gap",
+    "target": "src/llmbias/analysis/cams.py",
+    "operation": "verbatim function extraction; paths relocated"
+  },
+  {
+    "source": "data_analysis.ipynb",
+    "cell": 338,
+    "symbol": "load_gold_labels",
+    "target": "src/llmbias/analysis/cams.py",
+    "operation": "verbatim function extraction; paths relocated"
+  },
+  {
+    "source": "data_analysis.ipynb",
+    "cell": 338,
+    "symbol": "main",
+    "target": "src/llmbias/analysis/cams.py",
+    "operation": "verbatim function extraction; paths relocated"
+  },
+  {
+    "source": "data_analysis.ipynb",
+    "cell": 343,
+    "symbol": "tpr_fpr",
+    "target": "src/llmbias/analysis/cams_groups.py",
+    "operation": "verbatim function extraction; paths relocated"
+  },
+  {
+    "source": "data_analysis.ipynb",
+    "cell": 343,
+    "symbol": "compute_all_group_metrics",
+    "target": "src/llmbias/analysis/cams_groups.py",
+    "operation": "verbatim function extraction; paths relocated"
+  },
+  {
+    "source": "data_analysis.ipynb",
+    "cell": 358,
+    "symbol": "compute_multilabel_f1",
+    "target": "src/llmbias/analysis/sad.py",
+    "operation": "verbatim function extraction; paths relocated"
+  },
+  {
+    "source": "data_analysis.ipynb",
+    "cell": 358,
+    "symbol": "compute_group_metrics",
+    "target": "src/llmbias/analysis/sad.py",
+    "operation": "verbatim function extraction; paths relocated"
+  },
+  {
+    "source": "data_analysis.ipynb",
+    "cell": 358,
+    "symbol": "evaluate_model",
+    "target": "src/llmbias/analysis/sad.py",
+    "operation": "verbatim function extraction; paths relocated"
+  },
+  {
+    "source": "data_analysis.ipynb",
+    "cell": 358,
+    "symbol": "merge_all_metrics",
+    "target": "src/llmbias/analysis/sad.py",
+    "operation": "verbatim function extraction; paths relocated"
+  },
+  {
+    "source": "data_analysis.ipynb",
+    "cell": 367,
+    "symbol": "bootstrap_mean",
+    "target": "src/llmbias/analysis/education.py",
+    "operation": "verbatim function extraction; paths relocated"
+  },
+  {
+    "source": "data_analysis.ipynb",
+    "cell": 367,
+    "symbol": "compute_bias_by_role",
+    "target": "src/llmbias/analysis/education.py",
+    "operation": "verbatim function extraction; paths relocated"
+  },
+  {
+    "source": "data_analysis.ipynb",
+    "cell": 382,
+    "symbol": "extract_items",
+    "target": "src/llmbias/analysis/recommendation.py",
+    "operation": "verbatim function extraction; paths relocated"
+  },
+  {
+    "source": "data_analysis.ipynb",
+    "cell": 382,
+    "symbol": "load_jsonl",
+    "target": "src/llmbias/analysis/recommendation.py",
+    "operation": "verbatim function extraction; paths relocated"
+  },
+  {
+    "source": "data_analysis.ipynb",
+    "cell": 382,
+    "symbol": "req_idx_of",
+    "target": "src/llmbias/analysis/recommendation.py",
+    "operation": "verbatim function extraction; paths relocated"
+  },
+  {
+    "source": "data_analysis.ipynb",
+    "cell": 382,
+    "symbol": "query_type_of",
+    "target": "src/llmbias/analysis/recommendation.py",
+    "operation": "verbatim function extraction; paths relocated"
+  },
+  {
+    "source": "data_analysis.ipynb",
+    "cell": 382,
+    "symbol": "group_of",
+    "target": "src/llmbias/analysis/recommendation.py",
+    "operation": "verbatim function extraction; paths relocated"
+  },
+  {
+    "source": "data_analysis.ipynb",
+    "cell": 382,
+    "symbol": "split_attrs",
+    "target": "src/llmbias/analysis/recommendation.py",
+    "operation": "verbatim function extraction; paths relocated"
+  },
+  {
+    "source": "data_analysis.ipynb",
+    "cell": 382,
+    "symbol": "jaccard",
+    "target": "src/llmbias/analysis/recommendation.py",
+    "operation": "verbatim function extraction; paths relocated"
+  },
+  {
+    "source": "data_analysis.ipynb",
+    "cell": 382,
+    "symbol": "prag",
+    "target": "src/llmbias/analysis/recommendation.py",
+    "operation": "verbatim function extraction; paths relocated"
+  },
+  {
+    "source": "data_analysis.ipynb",
+    "cell": 451,
+    "symbol": "cue_word",
+    "target": "src/llmbias/analysis/translation_judge.py",
+    "operation": "verbatim function extraction; paths relocated"
+  },
+  {
+    "source": "data_analysis.ipynb",
+    "cell": 451,
+    "symbol": "parse_custom_id",
+    "target": "src/llmbias/analysis/translation_judge.py",
+    "operation": "verbatim function extraction; paths relocated"
+  },
+  {
+    "source": "data_analysis.ipynb",
+    "cell": 451,
+    "symbol": "create_mt_gender_batch",
+    "target": "src/llmbias/analysis/translation_judge.py",
+    "operation": "verbatim function extraction; paths relocated"
+  },
+  {
+    "source": "data_analysis.ipynb",
+    "cell": 490,
+    "symbol": "_normalize_base",
+    "target": "src/llmbias/analysis/qualitative.py",
+    "operation": "verbatim function extraction; paths relocated"
+  },
+  {
+    "source": "data_analysis.ipynb",
+    "cell": 490,
+    "symbol": "load_model",
+    "target": "src/llmbias/analysis/qualitative.py",
+    "operation": "verbatim function extraction; paths relocated"
+  },
+  {
+    "source": "data_analysis.ipynb",
+    "cell": 490,
+    "symbol": "find_gt_column",
+    "target": "src/llmbias/analysis/qualitative.py",
+    "operation": "verbatim function extraction; paths relocated"
+  },
+  {
+    "source": "data_analysis.ipynb",
+    "cell": 490,
+    "symbol": "load_gt_from_gpt41",
+    "target": "src/llmbias/analysis/qualitative.py",
+    "operation": "verbatim function extraction; paths relocated"
+  },
+  {
+    "source": "data_analysis.ipynb",
+    "cell": 490,
+    "symbol": "flip_stats",
+    "target": "src/llmbias/analysis/qualitative.py",
+    "operation": "verbatim function extraction; paths relocated"
+  },
+  {
+    "source": "data_analysis.ipynb",
+    "cell": 490,
+    "symbol": "main",
+    "target": "src/llmbias/analysis/qualitative.py",
+    "operation": "verbatim function extraction; paths relocated"
+  }
+]

@@ -1,0 +1,20 @@
+[
+  {
+    "path": "experiments/summarization_data/evaluation/summary_bias",
+    "head": "bac43fbea0a30ad5f97328ce4bfc7ff2f23cf7f8",
+    "copied_to": "legacy/experiments/summarization_data/evaluation/summary_bias",
+    "note": "Working-tree copy; .git history excluded; upstream notices retained"
+  },
+  {
+    "path": "experiments/conv_ai/evaluation/bbq/BBQ",
+    "head": "bea11bd97d79217245b5871acd247b9d6eb24598",
+    "copied_to": "legacy/experiments/conv_ai/evaluation/bbq/BBQ",
+    "note": "Working-tree copy; .git history excluded; upstream notices retained"
+  },
+  {
+    "path": "experiments/legal_data/evaluation/fairlex",
+    "head": "b3f539a78f164c405291b8f4cb3248ee49c90dc6",
+    "copied_to": "legacy/experiments/legal_data/evaluation/fairlex",
+    "note": "Working-tree copy; .git history excluded; upstream notices retained"
+  }
+]

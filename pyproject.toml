@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "llmbias-research"
+version = "0.1.0"
+description = "Behavior-preserving modular organization of the published LLMBias research workflows"
+requires-python = ">=3.10"
+dependencies = ["pandas", "numpy", "scikit-learn", "scipy"]
+
+[project.optional-dependencies]
+providers = ["openai", "anthropic", "python-dotenv", "requests", "tqdm"]
+analysis = ["matplotlib", "seaborn", "torch"]
+datasets = ["datasets", "scikit-learn"]
+notebooks = ["jupyterlab"]
+
+[project.scripts]
+llmbias = "llmbias.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
