@@ -51,6 +51,9 @@ register("prepare-translation-judge", "preparation.translation_judge:create_batc
 register("evaluate-translation", "evaluation.translation:evaluate", "cell 456")
 register("convert-summarization", "parsing.summarization:process_file", "cell 412")
 register("evaluate-summarization", "evaluation.summary_adapter:evaluate", "cell 414 and preserved summary_bias checkout", note="Requires external NLP environment/resources; explicitly runs upstream tools.")
+register("convert-bold", "parsing.bold:process_file", "BOLD dataset metadata and saved provider envelopes")
+register("evaluate-bold-sentiment", "evaluation.bold:evaluate_sentiment", "Dhamala et al. 2021 §4.1,A.2.4; LLMBias Appendix D.7")
+register("evaluate-bold", "evaluation.bold:evaluate", "Dhamala et al. 2021 §§3.3,4.1,4.2,A.2; LLMBias Appendix D.7", note="Explicit text policy and toxicity provenance required; see docs/bold.md.")
 register("convert-bbq", "parsing.bbq:process_file", "cell 420")
 register("evaluate-bbq", "evaluation.bbq:evaluate", "preserved BBQ/analysis_scripts/BBQ_bias_score.py")
 register("prepare-legal-gender", "preparation.legal_gender:create_batch", "cell 386")
@@ -63,13 +66,8 @@ for name, fn, cells, frames, frame_lists in [
     ("bbq", "prepare_bbq", "188", ("df",), ()),
     ("recruitment", "match_recruitment", "153", ("df_cv", "df_jobs"), ()),
     ("movielens", "prepare_movielens", "220,222,226", ("ratings", "movies"), ()),
-    ("biasmd", "sample_biasmd", "14", ("df",), ()),
     ("medical-bias-sample", "sample_medical_bias", "48", ("merged_df",), ()),
-    ("disease-buster", "sample_disease_buster", "56", ("df",), ()),
     ("mental-multilabel", "sample_mental_multilabel", "71", ("df",), ()),
-    ("mental-joint-labels", "sample_mental_joint_labels", "76", ("df",), ()),
-    ("mental-single-label", "sample_mental_single_label", "82", ("df",), ()),
-    ("admission-sample", "sample_admission", "131", ("df",), ()),
     ("translation", "prepare_translation", "111,114,115,117", (), ()),
     ("neutralization-results", "attach_neutralized_text", "322,323", ("df",), ()),
     ("legal-gender-results", "update_legal_gender", "387", (), ()),
@@ -77,7 +75,6 @@ for name, fn, cells, frames, frame_lists in [
     ("medbullets", "prepare_medbullets", "31,32,37", ("df",), ()),
     ("medbullets-sample", "sample_medbullets_by_gender", "40", ("df",), ()),
     ("medical-prompts", "prepare_medical_prompts", "213,216", (), ()),
-    ("admission-fields", "extract_admission_fields", "135", ("df",), ()),
 ]:
     register("prepare-" + name, "preparation.notebook_recipes:" + fn, "cells " + cells, frames, frame_lists)
 
@@ -95,17 +92,14 @@ TASK_COVERAGE = {
     "medical_bias": {"generation": True, "evaluation": "neutral, blocks, matching, cleaned; explicitly versioned", "parsing": "existing MCQ parsers; medical cleanup"},
     "CAMS": {"generation": True, "evaluation": "evaluate-cams / evaluate-cams-groups", "parsing": "three provider parsers"},
     "SAD": {"generation": True, "evaluation": "evaluate-sad", "parsing": "three provider parsers; onehot and indices"},
-    "dreaddit": {"generation": True, "evaluation": None, "parsing": None, "reason": "No dedicated historical response-parser/scorer workflow located; do not reuse CAMS OUTPUT parsing."},
     "djinni": {"generation": True, "evaluation": "cell306 and cell304", "parsing": "OpenAI and Anthropic; no dedicated DeepSeek decision parser located"},
     "education_ranking": {"generation": True, "evaluation": "evaluate-education", "parsing": "parse-education"},
-    "education_ga": {"generation": True, "evaluation": None, "parsing": None, "reason": "No dedicated education-admission evaluator located."},
     "movielens": {"generation": True, "evaluation": "cell382 and cell379", "parsing": "inside evaluator, provider/filename dependent"},
     "ecthr": {"generation": True, "evaluation": "standalone legal tensors and fairness evaluator", "parsing": "inside legal tensor preparation"},
     "mt_gender": {"generation": True, "evaluation": "evaluate-translation", "parsing": "judge outputs; prepare-translation-judge uses historical judge settings"},
     "ontonotes": {"generation": True, "evaluation": "evaluate-summarization (external dependencies)", "parsing": "convert-summarization"},
     "bbq": {"generation": True, "evaluation": "evaluate-bbq", "parsing": "convert-bbq"},
-    "bold": {"generation": True, "evaluation": None, "parsing": None, "reason": "No dedicated BOLD evaluator located."},
-    "diasafety": {"generation": False, "evaluation": None, "parsing": None, "reason": "Preparation/exploration only in the available source."},
+    "bold": {"generation": True, "evaluation": "evaluate-bold (reference-based reconstruction; original toxicity checkpoint unlocated)", "parsing": "convert-bold", "paper": "Table 14; Appendix D.7"},
 }
 
 

@@ -1,4 +1,6 @@
-# Migration validation
+# Initial migration validation
+
+Historical record of the first migration. See [BOLD and paper-scope validation](bold-validation.json) for the subsequent implementation pass.
 
 The offline preservation suite passed all nine tests:
 

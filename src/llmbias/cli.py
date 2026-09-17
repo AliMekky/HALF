@@ -32,6 +32,8 @@ def build(dataset, model, output_dir, data_root):
     from llmbias.registry import functions
 
     name = dataset.split("/")[-1]
+    if name not in functions:
+        raise ValueError(f"Dataset {name} is outside the paper scope. Choose from {sorted(functions)}")
     df = pd.read_csv(Path(data_root) / f"{dataset}.csv")
     template = {
         "custom_id": None, "method": "POST", "url": "/v1/chat/completions",
@@ -42,7 +44,7 @@ def build(dataset, model, output_dir, data_root):
     }
     if "o4" not in model.lower():
         template["body"]["temperature"] = 0.6
-    if name in ("medbullets", "djinni", "CAMS", "SAD", "dreaddit", "movielens"):
+    if name in ("medbullets", "djinni", "CAMS", "SAD", "movielens"):
         requests, neutral = functions[name](df, model, name, template)
     elif name in DATASETS:
         requests, neutral = functions[name](df, model, name, template), None
@@ -71,7 +73,7 @@ def build(dataset, model, output_dir, data_root):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
-    sub.add_parser("list", help="List unchanged legacy workflows")
+    sub.add_parser("list", help="List paper-scoped workflows")
     sub.add_parser("coverage", help="Show located implementations and explicit task gaps")
     from llmbias.workflows import WORKFLOWS
     workflow = sub.add_parser("workflow", help="Run a notebook-derived workflow with explicit JSON configuration")

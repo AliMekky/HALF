@@ -2,7 +2,9 @@
 
 A separate, modular working repository for the existing LLMBias research code. This is a structural migration of the current working tree, including untracked research files. It does not revise published methods or claim to reproduce every paper table.
 
-Scientific function bodies, prompts, dataset selection, demographic combinations, parsing rules, model settings, and metric formulas are preserved. Changes are module boundaries, imports, filesystem configuration, documentation, and environment-based credential loading. Suspected methodological issues are deliberately left unchanged.
+For retained historical workflows, scientific function bodies, prompts, dataset selection, demographic combinations, parsing rules, model settings, and metric formulas are preserved. Active experiment scope now follows the supplied paper; the new BOLD evaluator is a documented reference-based reconstruction. Changes are module boundaries, imports, filesystem configuration, documentation, and environment-based credential loading. Suspected methodological issues are deliberately left unchanged.
+
+See [paper scope](docs/paper-scope.md) for the twelve retained experiments and [BOLD scoring](docs/bold.md) for its original sources, commands, and reproduction limits.
 
 ## Layout
 

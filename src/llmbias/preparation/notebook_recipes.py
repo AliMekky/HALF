@@ -1,4 +1,4 @@
-"""Historical notebook cells [14, 31, 32, 37, 40, 48, 56, 71, 76, 82, 100, 101, 104, 111, 114, 115, 117, 131, 135, 153, 188, 213, 216, 220, 222, 226, 322, 323, 387, 403]; structural extraction, unchanged scientific logic."""
+"""Historical notebook cells [31, 32, 37, 40, 48, 71, 100, 101, 104, 111, 114, 115, 117, 153, 188, 213, 216, 220, 222, 226, 322, 323, 387, 403]; structural extraction, unchanged scientific logic."""
 import pandas as pd
 import numpy as np
 import random
@@ -74,17 +74,6 @@ def prepare_movielens(ratings, movies):
     user_anchor_groups = anchors_combined.groupby(['userId', 'anchor_type', 'year_range', 'genre_phrase'])['formatted_movie'].apply(lambda x: ', '.join(x)).reset_index(name='anchor_movies')
     return user_anchor_groups
 
-def sample_biasmd(df):
-    type_counts = df['Type'].value_counts()
-    target_total = 1000
-    proportional_counts = (type_counts / type_counts.sum() * target_total).round().astype(int)
-    diff = proportional_counts.sum() - target_total
-    if diff != 0:
-        max_type = proportional_counts.idxmax()
-        proportional_counts[max_type] -= diff
-    df_sampled = df.groupby('Type', group_keys=False).apply(lambda x: x.sample(n=proportional_counts[x.name], random_state=42)).reset_index(drop=True)
-    return df_sampled
-
 def sample_medical_bias(merged_df):
     target_total = 1000
     bias_types = merged_df['bias_type'].unique()
@@ -99,25 +88,6 @@ def sample_medical_bias(merged_df):
     df_sampled = df_sampled.sample(n=1000, random_state=42)
     df_sampled = df_sampled.reset_index(drop=True)
     print(df_sampled['bias_type'].value_counts())
-    return df_sampled
-
-def sample_disease_buster(df):
-    bias_types = df['Type'].value_counts().index.tolist()
-    samples_per_type = 31
-    extra = 8
-    samples = []
-    for bias in bias_types:
-        df_subset = df[df['Type'] == bias]
-        sampled = df_subset.sample(n=samples_per_type, random_state=42)
-        samples.append(sampled)
-    extra_types = pd.Series(bias_types).sample(n=extra, random_state=42)
-    for bias in extra_types:
-        df_subset = df[df['Type'] == bias]
-        sampled = df_subset.sample(n=1, random_state=42)
-        samples.append(sampled)
-    df_sampled = pd.concat(samples).reset_index(drop=True)
-    print(df_sampled['Type'].value_counts())
-    print('Total samples:', len(df_sampled))
     return df_sampled
 
 def sample_mental_multilabel(df):
@@ -138,56 +108,6 @@ def sample_mental_multilabel(df):
         df_sampled = pd.concat([df_sampled, pad_rows]).reset_index(drop=True)
         df_remaining = df_remaining.drop(pad_rows.index).reset_index(drop=True)
     return {'sampled': df_sampled, 'remaining': df_remaining}
-
-def sample_mental_joint_labels(df):
-    import pandas as pd
-    df['joint_label'] = df['Thwarted_Belongingness'].astype(str) + df['Perceived_Burdensomeness'].astype(str)
-    label_dist = df['joint_label'].value_counts(normalize=True)
-    target_counts = (label_dist * 1000).round().astype(int)
-    diff = 1000 - target_counts.sum()
-    if diff != 0:
-        target_counts.iloc[0] += diff
-    samples = []
-    for (label, count) in target_counts.items():
-        subset = df[df['joint_label'] == label]
-        sampled = subset.sample(n=count, random_state=42)
-        samples.append(sampled)
-    df_sampled = pd.concat(samples).reset_index(drop=True)
-    df_sampled = df_sampled.drop(columns='joint_label')
-    return df_sampled
-
-def sample_mental_single_label(df):
-    from sklearn.model_selection import train_test_split
-    import pandas as pd
-    label_counts = df['label'].value_counts()
-    total_count = label_counts.sum()
-    label_fraction = label_counts / total_count
-    test_counts = (label_fraction * 1000).round().astype(int)
-    diff = 1000 - test_counts.sum()
-    if diff != 0:
-        largest_label = test_counts.idxmax()
-        test_counts[largest_label] += diff
-    test_df_parts = []
-    train_df_parts = []
-    for (label, count) in test_counts.items():
-        label_df = df[df['label'] == label]
-        test_part = label_df.sample(n=count, random_state=42)
-        train_part = label_df.drop(test_part.index)
-        test_df_parts.append(test_part)
-        train_df_parts.append(train_part)
-    test_df = pd.concat(test_df_parts)
-    train_df = pd.concat(train_df_parts)
-    test_df = test_df.sample(frac=1, random_state=42).reset_index(drop=True)
-    train_df = train_df.sample(frac=1, random_state=42).reset_index(drop=True)
-    return {'test': test_df, 'train': train_df}
-
-def sample_admission(df):
-    import pandas as pd
-    from sklearn.model_selection import train_test_split
-    df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
-    sample_size = 1000
-    (df_sampled, _) = train_test_split(df, train_size=sample_size, random_state=42)
-    return df_sampled
 
 def prepare_translation(pro_path, anti_path):
     df = pd.read_csv(pro_path, sep='\t', header=None, names=['gender', 'src_word_index', 'sentence', 'profession'])
@@ -307,34 +227,4 @@ def prepare_medical_prompts(base_dir):
         return df
     df = collect_prompts(base_dir)
     df['prompt'] = df['prompt'].apply(lambda x: x.replace('GPT model', 'assistant'))
-    return df
-
-def extract_admission_fields(df):
-
-    def extract_structured_fields(text):
-        try:
-            gender = re.search('The (\\w+) student', text).group(1)
-            major = ast.literal_eval(re.search('studied (\\[.*?\\])', text).group(1))[0]
-            school = re.search('at (.*?) with a GPA', text).group(1)
-            gpa = float(re.search('GPA of ([\\d.]+)', text).group(1))
-            degree = re.search('receiving the degree of (.+?)\\.', text).group(1)
-            gre_str = re.search('GRE test with scores (.*?) and TOEFL', text).group(1)
-            gre = ast.literal_eval(gre_str)
-            gre_verbal = gre.get('Verbal')
-            gre_quant = gre.get('Quantitative')
-            gre_aw = gre.get('Analytical Writing')
-            toefl_str = re.search('TOEFL test with scores (.*?)\\.', text).group(1)
-            toefl = ast.literal_eval(toefl_str)
-            toefl_total = toefl.get('Total')
-            interest = ast.literal_eval(re.search('interested in (\\[.*?\\])', text).group(1))[0]
-            country = re.search('are from ([^\\d]+?) and', text).group(1)
-            age = int(re.search('are (\\d{1,3}) years old', text).group(1))
-            rec_score = int(re.search('evaluation of (\\d+)/10', text).group(1))
-            return pd.Series({'gender': gender, 'major': major, 'school': school, 'gpa': gpa, 'degree': degree, 'gre_verbal': gre_verbal, 'gre_quant': gre_quant, 'gre_aw': gre_aw, 'toefl_total': toefl_total, 'interest': interest, 'country': country, 'age': age, 'rec_score': rec_score})
-        except Exception as e:
-            print(text)
-            print(f'Failed to parse prompt: {e}')
-            return pd.Series([None] * 13, index=['gender', 'major', 'school', 'gpa', 'degree', 'gre_verbal', 'gre_quant', 'gre_aw', 'toefl_total', 'interest', 'country', 'age', 'rec_score'])
-    extracted_df = df['prompts'].apply(extract_structured_fields)
-    df = pd.concat([df, extracted_df], axis=1)
     return df

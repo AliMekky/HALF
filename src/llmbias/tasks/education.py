@@ -46,24 +46,3 @@ def create_education_template(
                 batch_result.append(temp_template)
 
     return batch_result
-
-def create_education_admission_template(
-        df,                  
-        model: str,
-        dataset: str,
-        base_template_dic: Dict,
-    ):
-    batch_result = []
-
-    for i in range(len(df[:500])):
-
-        for combination in EDUCATION_COMBINATION:
-            prompt = df.iloc[i]['prompt_neutral']
-            prompt = prompt.replace('The student', f'The {combination} student')
-            temp_template = copy.deepcopy(base_template_dic)
-            temp_template['custom_id'] = f"request-{i}-{model}-{dataset}"
-            temp_template['body']['messages'][0]['content'] =  SYSTEM_PROMPT_EDUCATION_ADMISSION
-            temp_template['body']['messages'][1]['content'] = prompt
-            batch_result.append(temp_template)
-
-    return batch_result

@@ -77,10 +77,13 @@ def create_neutralization_batch(df, model, output_path):
 # ================================
 
 if __name__ == "__main__":
-    # 🔧 Load your dataset (CSV or TSV with a column 'text')
-    input_file = str(workspace_path('repo/LLMBias/mental_health_data/dreaddit.csv'))   # Change to your file
-    output_file = "neutralization_batch_dreaddit.jsonl"
-    model_name = "gpt-4.1-mini-2025-04-14"           # Change to your model
+    import argparse
+    parser = argparse.ArgumentParser(description="Prepare neutralization requests for the paper's mental-health datasets")
+    parser.add_argument('--input-file', required=True)
+    parser.add_argument('--output-file', required=True)
+    parser.add_argument('--model', default='gpt-4.1-mini-2025-04-14')
+    args = parser.parse_args()
+    input_file, output_file, model_name = args.input_file, args.output_file, args.model
 
     # 🔥 Load DataFrame
     if input_file.endswith('.tsv'):

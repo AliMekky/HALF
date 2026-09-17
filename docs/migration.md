@@ -19,7 +19,7 @@ Prompt strings, demographic order, first-500 selection, IDs, temperature rules, 
 
 ## Historical workflows
 
-Some notebook functions use module globals, and some preparation scripts execute at import time. These behaviors remain explicit limitations rather than silently modified implementations. The full notebook and original scripts are in `legacy/`. Extracted analysis function provenance includes zero-based notebook cell numbers. The later recommendation functions come from cell 382; the earlier cell 379 remains in the archive and was not chosen as the reusable implementation.
+Some notebook functions use module globals; explicit adapters expose their input and output paths. Preparation script execution is guarded by main entry points. The full notebook and original scripts are in `legacy/`. Extracted analysis function provenance includes zero-based notebook cell numbers. The later recommendation functions come from cell 382; the earlier cell 379 is also available as a separately named historical workflow.
 
 The legacy archive keeps nested upstream code without their `.git` histories. Their license/README files remain. External workspace inputs outside LLMBias are not duplicated; scripts needing them require `LLMBIAS_WORKSPACE`. This includes translation source files at the enclosing workspace root. Moving to another machine requires restoring those inputs as well as the artifact bundle.
 
@@ -28,3 +28,7 @@ The legacy archive keeps nested upstream code without their `.git` histories. Th
 Checks compare extracted function syntax trees and prompt constants with the preserved source, and compare generated requests on actual dataset samples for every registered task. Small synthetic tests compare scoring/parsing functions with their original notebook or script implementations. These are equivalence checks, not new assertions about scientific validity. No live API jobs or complete historical notebook execution are used.
 
 The artifact inventory records whether bytes are identical; differences are limited to text containing credentials and normalized notebook JSON. Verification also checks the original source files against their recorded hashes after migration.
+
+## Paper-scoped follow-up
+
+The active package now follows [paper scope](paper-scope.md), removing unreported experiments while keeping the archive intact. The BOLD evaluator is new reference-based code documented in [BOLD scoring](bold.md), rather than an unchanged notebook extraction. Existing request builders and evaluator formulas for retained tasks remain preserved.

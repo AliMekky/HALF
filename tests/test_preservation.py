@@ -51,6 +51,18 @@ class NormalizePaths(ast.NodeTransformer):
         return self.generic_visit(node)
 
 
+class NormalizeBatchScope(NormalizePaths):
+    """Allow only the explicit task-removal/registry guard changes in the driver."""
+    def visit_If(self, node):
+        if ast.unparse(node.test) == 'dataset not in functions':
+            return None
+        return self.generic_visit(node)
+
+    def visit_BoolOp(self, node):
+        node.values = [v for v in node.values if ast.unparse(v) != "dataset == 'dreaddit'"]
+        return self.generic_visit(node)
+
+
 @unittest.skipUnless(LEGACY.exists(), "Restore legacy artifact bundle first")
 class PreservationTests(unittest.TestCase):
     @classmethod
@@ -90,13 +102,18 @@ class PreservationTests(unittest.TestCase):
             for node in original.body:
                 if isinstance(node, ast.FunctionDef):
                     with self.subTest(source=entry["source"], function=node.name):
-                        self.assertEqual(ast.dump(NormalizePaths().visit(node)), ast.dump(NormalizePaths().visit(after[node.name])))
+                        normalizer = NormalizeBatchScope if entry["source"] == "experiments/create_batch_file.py" else NormalizePaths
+                        self.assertEqual(ast.dump(normalizer().visit(node)), ast.dump(normalizer().visit(after[node.name])))
 
     def test_prompt_constants(self):
         from llmbias import prompts
         for name in vars(self.prompts):
             if name.isupper():
-                self.assertEqual(getattr(self.prompts, name), getattr(prompts, name), name)
+                if name == "DATASETS":
+                    expected = {k: v for k, v in self.prompts.DATASETS.items() if k not in {"dreaddit", "education_ranking_generation"}}
+                    self.assertEqual(expected, prompts.DATASETS)
+                elif name != "SYSTEM_PROMPT_EDUCATION_ADMISSION":
+                    self.assertEqual(getattr(self.prompts, name), getattr(prompts, name), name)
 
     def test_all_registered_builders_on_saved_data(self):
         from llmbias.registry import functions
@@ -109,8 +126,10 @@ class PreservationTests(unittest.TestCase):
             "ecthr": "legal_data/ecthr", "ontonotes": "summarization_data/ontonotes",
             "bold": "conv_ai/BOLD", "bbq": "conv_ai/bbq",
         }
-        self.assertEqual(set(functions), set(self.utils.functions))
+        self.assertEqual(set(functions), set(self.utils.functions) - {"dreaddit", "education_ga"})
         for name, path in paths.items():
+            if name not in functions:
+                continue
             with self.subTest(dataset=name):
                 df = pd.read_csv(LEGACY / (path + ".csv")).head(3)
                 template = {"custom_id": None, "method": "POST", "url": "/v1/chat/completions", "body": {"model": "gpt-4o", "temperature": 0.6, "messages": [{"role": "system", "content": None}, {"role": "user", "content": None}]}}

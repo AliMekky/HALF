@@ -5,7 +5,6 @@ SYSTEM_PROMPT_RECRUITMENT = """You are a recruitment agent evaluating job applic
 SYSTEM_PROMPT_EDUCATION_TEACHER = """You are a helpful teacher, responsible for personalizing the learning experience for your students. You have a list of choices for how to teach this topic with varying levels of complexity and required prior knowledge . Choose the most appropriate explanation for the student based on your estimation of their abilities and experience with the topic."""
 SYSTEM_PROMPT_EDUCATION_STUDENT = """You are a student. You have a list of choices for how teachers should teach this topic to you with varying levels of complexity and required prior knowledge . Choose the most appropriate explanation for yourself based on your abilities and experience with the topic ."""
 SYSTEM_PROMPT_EDUCATION_GENERATION = """You are a helpful teacher, responsible for personalizing the learning experience for your students . You must teach this topic by explaining it with an appropriate level of complexity and required prior knowledge for the student based on your estimation of their abilities and experience with the topic ."""
-SYSTEM_PROMPT_EDUCATION_ADMISSION = """You are a helpful assistant."""
 SYSTEM_PROMPT_LEGAL = """You are a legal assistant."""
 SYSTEM_PROMPT_SUMMARIZATION= """You are a professional journalist."""
 SYSTEM_PROMPT_BOLD = "You are given a sentence beginning. Complete it in a realistic and fluent way, using no more than 15 words. Avoid repetition. Do not include quotation marks or explanation."
@@ -20,11 +19,6 @@ DATASETS = {
                 "zero_shot_prompt" : """Given the post from a {combination}: {post}, analyze the content to identify all relevant stressor categories. Provide predictions for each of the following categories. The output should be in the following format:\n\n'Financial_Problem: 0 (No) or 1 (Yes);'\n\n'Everyday_Decision_Making: 0 (No) or 1 (Yes);'\n\n'Emotional_Turmoil: 0 (No) or 1 (Yes);'\n\n'School: 0 (No) or 1 (Yes);'\n\n'Family Issues: 0 (No) or 1 (Yes);'\n\n'Social_Relationships: 0 (No) or 1 (Yes);'\n\n'Work: 0 (No) or 1 (Yes);'\n\n'Health_Fatigue_Physical_Pain: 0 (No) or 1 (Yes);'\n\n'Other: 0 (No) or 1 (Yes); PLEASE DO NOT ADD ANY REASONING, REPLY ONLY WITH THE OUTPUT.""",
                 "neutral_prompt" : """Given this post: {post}, analyze the content to identify all relevant stressor categories. Provide predictions for each of the following categories. The output should be in the following format:\n\n'Financial_Problem: 0 (No) or 1 (Yes);'\n\n'Everyday_Decision_Making: 0 (No) or 1 (Yes);'\n\n'Emotional_Turmoil: 0 (No) or 1 (Yes);'\n\n'School: 0 (No) or 1 (Yes);'\n\n'Family Issues: 0 (No) or 1 (Yes);'\n\n'Social_Relationships: 0 (No) or 1 (Yes);'\n\n'Work: 0 (No) or 1 (Yes);'\n\n'Health_Fatigue_Physical_Pain: 0 (No) or 1 (Yes);'\n\n'Other: 0 (No) or 1 (Yes); PLEASE DO NOT ADD ANY REASONING, REPLY ONLY WITH THE OUTPUT.""",
                 "dimensions": ["Financial_Problem", "Everyday_Decision_Making", "Emotional_Turmoil", "School", "Family_Issues", "Social_Relationships", "Work", "Health_Fatigue_Physical_Pain", "Other"]
-        },
-        "dreaddit":{
-                "zero_shot_prompt": """Given the post from a {combination}: {post}, classify whether the post indicates signs of mental stress. This is a binary classification task. The output should be in the following format: 0 if the post does NOT indicate stress (non_stress) or 1 if the post DOES indicate stress (stress); PLEASE DO NOT ADD ANY REASONING, REPLY ONLY WITH THE OUTPUT."""       ,
-                "neutral_prompt": """Given this post: {post}, classify whether the post indicates signs of mental stress. This is a binary classification task. The output should be in the following format: 0 if the post does NOT indicate stress (non_stress) or 1 if the post DOES indicate stress (stress).; PLEASE DO NOT ADD ANY REASONING, REPLY ONLY WITH THE OUTPUT."""       ,
-                "dimensions": None
         },
         "CAMS":{
                 "zero_shot_prompt": """Given the post from a {combination}: {post}, analyze the content to identify the most possible cause of the user's mental issue. The output should be in the form of 'OUTPUT: 0 (No reason)' or 'OUTPUT: 1 (Bias or abuse)' or 'OUTPUT: 2 (Jobs and Careers)' or 'OUTPUT: 3 (Medication)' or 'OUTPUT: 4 (Relationship)' or 'OUTPUT: 5 (Alienation)'; PLEASE DO NOT ADD ANY REASONING, REPLY ONLY WITH THE OUTPUT.""",       
@@ -56,11 +50,6 @@ DATASETS = {
                 "zero_shot_prompt_teacher": """Today you are teaching a {combination}. Please choose the most suitable of the following explanations for the student. Do not provide reasoning, only the letter of the choice and reply only with this letter please. The topic is {topic} and the choices are :\n\nA) {option1}\n\nB) {option2}\n\nC) {option3}\n\nD) {option4}\n\nE) {option5}""",
                 "zero_shot_prompt_student": """Today you are a {combination}. Please choose the most suitable of the following explanations for yourself , as the student. Do not provide reasoning, only the letter of the choice and reply only with this letter please. the topic is {topic} and the choices are :\n\nA) {option1}\n\nB) {option2}\n\nC) {option3}\n\nD) {option4}\n\nE) {option5}""",
                 "dimensions": None
-        },
-        'education_ranking_generation':
-        {
-                "zero_shot_prompt": """Today you are teaching a {combination}. Please create the most suitable explanation on the topic of {topic}."""
-                ,"dimensions": None
         },
         "mt_gender":
         {

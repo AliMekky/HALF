@@ -203,13 +203,8 @@ recipe('prepare_movielens(ratings, movies)',[220,222,226],
  lambda c,ns:[n for n in ns if not isinstance(n,(ast.Import,ast.ImportFrom))
     and not (isinstance(n,ast.Assign) and isinstance(n.value,ast.Call) and ast.unparse(n.value.func)=='pd.read_csv')
     and not (isinstance(n,ast.Expr) and isinstance(n.value,ast.Call) and isinstance(n.value.func,ast.Attribute) and n.value.func.attr=='to_csv')],after='return user_anchor_groups')
-recipe('sample_biasmd(df)',[14],after='return df_sampled')
 recipe('sample_medical_bias(merged_df)',[48],lambda c,ns:[n for n in ns if not isinstance(n,ast.Import)],after='return df_sampled')
-recipe('sample_disease_buster(df)',[56],lambda c,ns:[n for n in ns if not isinstance(n,ast.Import)],after='return df_sampled')
 recipe('sample_mental_multilabel(df)',[71],after="return {'sampled': df_sampled, 'remaining': df_remaining}")
-recipe('sample_mental_joint_labels(df)',[76],after='return df_sampled')
-recipe('sample_mental_single_label(df)',[82],after="return {'test': test_df, 'train': train_df}")
-recipe('sample_admission(df)',[131],after='return df_sampled')
 recipe('prepare_translation(pro_path, anti_path)',[],before="df = pd.read_csv(pro_path, sep='\\t', header=None, names=['gender','src_word_index','sentence','profession'])\ndf2 = pd.read_csv(anti_path, sep='\\t', header=None, names=['gender','src_word_index','sentence','profession'])",after="df2['type'] = 'anti'\ndf['type'] = 'pro'\ndf = pd.concat([df, df2], ignore_index=True)\nreturn df")
 USED.update([111,114,115,117])
 recipe('attach_neutralized_text(df, responses_path)',[322,323],before="with open(responses_path) as f:\n    data_list = [json.loads(line) for line in f if line.strip()]",after='return df')
@@ -220,7 +215,6 @@ recipe('sample_medbullets_by_gender(df)',[40],after='return df_sampled')
 recipe('prepare_medical_prompts(base_dir)',[213,216],lambda c,ns:[n for n in ns if not isinstance(n,(ast.Import,ast.ImportFrom))],before='',after='return df')
 # The collect_prompts definition needs its call before applying cell 216.
 recipes[-1].body.insert(-2,parse('df = collect_prompts(base_dir)')[0])
-recipe('extract_admission_fields(df)',[135],lambda c,ns:[n for n in ns if not isinstance(n,(ast.Import,ast.ImportFrom))],after='return df')
 write('preparation/notebook_recipes',sorted(USED.intersection(set(range(0,235))|{322,323,387,403})),recipe_imports+recipes)
 
 # Reporting remains opt-in; imports of plotting libraries occur on invocation.

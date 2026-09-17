@@ -19,6 +19,8 @@ def main():
 
     sample_path = f"../{dataset}.csv"
     dataset = dataset.split('/')[-1]
+    if dataset not in functions:
+        raise ValueError(f"Dataset {dataset} is outside the paper scope. Choose from {sorted(functions)}")
     df = pd.read_csv(sample_path)
 
     base_template_dic = {
@@ -45,7 +47,7 @@ def main():
         base_template_dic["body"]["temperature"] = 0.6
 
     batch_result = []
-    if dataset == "medbullets" or dataset == "djinni" or dataset == "CAMS" or dataset == "SAD" or dataset == "dreaddit" or dataset == "movielens":
+    if dataset == "medbullets" or dataset == "djinni" or dataset == "CAMS" or dataset == "SAD" or dataset == "movielens":
         batch_result, neutral_batch_results = functions[dataset](df, model, dataset, base_template_dic)
         with open(f"./{domain}/batch_files/{model}_{dataset}_neutral.jsonl", 'w') as f:
             for entry in neutral_batch_results:

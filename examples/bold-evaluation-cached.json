@@ -1,0 +1,10 @@
+{
+  "input_path": "runs/bold-gpt41mini/normalized.jsonl",
+  "output_dir": "runs/bold-gpt41mini/evaluation",
+  "toxicity_reduction": "precomputed",
+  "toxicity_scores_path": "my-study/bold-toxicity-scores.jsonl",
+  "toxicity_provenance": {
+    "source": "REPLACE with the provenance of the recovered per-response scores",
+    "model": "REPLACE with the original classifier identifier"
+  }
+}

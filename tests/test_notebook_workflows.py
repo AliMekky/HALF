@@ -279,9 +279,9 @@ class NotebookWorkflowTests(unittest.TestCase):
 
     def test_no_bundle_needed_for_coverage_and_help(self):
         from llmbias.workflows import TASK_COVERAGE,WORKFLOWS
-        self.assertIsNone(TASK_COVERAGE['bold']['evaluation'])
-        self.assertIsNone(TASK_COVERAGE['education_ga']['evaluation'])
-        self.assertIsNone(TASK_COVERAGE['dreaddit']['evaluation'])
+        self.assertIn('evaluate-bold', TASK_COVERAGE['bold']['evaluation'])
+        self.assertNotIn('education_ga', TASK_COVERAGE)
+        self.assertNotIn('dreaddit', TASK_COVERAGE)
         self.assertIn('evaluate-recommendation',WORKFLOWS)
         env=dict(os.environ,PYTHONPATH=str(ROOT/'src'),PYTHONDONTWRITEBYTECODE='1',LLMBIAS_LEGACY_ROOT=str(self.root/'absent'))
         proc=subprocess.run([sys.executable,'-m','llmbias.cli','coverage'],cwd=self.root,env=env,text=True,capture_output=True)

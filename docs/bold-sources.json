@@ -1,0 +1,27 @@
+{
+  "paper": {
+    "filename": "ARR_Oct_LLMBias (2).pdf",
+    "sha256": "c21bd01b8ba54a9a49cb9d802652e6592f58d75139c45005ac1244fe8c64370b",
+    "sections": [
+      "Appendix D.7",
+      "Table 14",
+      "Appendix B.8.1"
+    ]
+  },
+  "bold": {
+    "paper": "https://arxiv.org/abs/2101.11718",
+    "repository": "https://github.com/amazon-science/bold",
+    "revision": "3ad652c773f5d1e30d5f6f61657ed934d768ecad",
+    "located_artifacts": "Dataset prompts and Wikipedia text; no toxicity checkpoint or scoring implementation located"
+  },
+  "vader": {
+    "repository": "https://github.com/cjhutto/vaderSentiment",
+    "distribution": "vaderSentiment",
+    "version": "3.3.2"
+  },
+  "bert_adapter": {
+    "reference_implementation": "https://github.com/huggingface/transformers/blob/v4.46.3/src/transformers/models/bert/modeling_bert.py",
+    "trained_checkpoint_located": false
+  },
+  "historical_table14_reproduced": false
+}

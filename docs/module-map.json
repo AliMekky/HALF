@@ -42,12 +42,6 @@
   },
   {
     "source": "experiments/utils.py",
-    "symbol": "create_education_admission_template",
-    "target": "src/llmbias/tasks/education.py",
-    "operation": "verbatim function extraction"
-  },
-  {
-    "source": "experiments/utils.py",
     "symbol": "create_translation_template",
     "target": "src/llmbias/tasks/translation.py",
     "operation": "verbatim function extraction"
@@ -159,11 +153,6 @@
   {
     "source": "legal_data/process_dataset_legal.py",
     "target": "src/llmbias/preparation/legal_sampling.py",
-    "operation": "move; imports, paths, authentication wiring only"
-  },
-  {
-    "source": "conv_ai/diasafety.py",
-    "target": "src/llmbias/preparation/diasafety.py",
     "operation": "move; imports, paths, authentication wiring only"
   },
   {
