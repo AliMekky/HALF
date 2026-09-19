@@ -23,4 +23,4 @@ Removed from active registration, dedicated modules/functions, and preparation r
 
 No original files or archival results were deleted. Discarded experiments remain only in the ignored historical `legacy/` archive and prior Git history. Historical review documents describe the earlier inventory; this file and `llmbias coverage` define the current scope. [Archived entries](archived-experiments.json) record the removal.
 
-[New BOLD scoring](bold.md) is clearly distinguished from behavior-preserving extractions. The remaining obstacle to exact BOLD reproduction is missing historical scoring artifacts, not an implicit choice of a substitute model. Summarization still requires its original upstream NLP environment; adding BOLD does not establish end-to-end reproduction of all paper tables.
+[Recovered BOLD scoring](bold.md) now uses workspace `conv_ai/eval.py`, including its `unitary/toxic-bert` model and request-ID category aggregation. Exact historical library/model revisions remain unrecorded in the source; full toxicity inference has not been rerun. Summarization still requires its original upstream NLP environment.

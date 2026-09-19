@@ -10,7 +10,7 @@ from unittest.mock import patch
 
 import pandas as pd
 
-from llmbias.evaluation.bold import (LABELS, aggregate, evaluate, load_cached_scores,
+from llmbias.evaluation.bold_reference import (LABELS, aggregate, evaluate, load_cached_scores,
                                     reduce_toxicity, score_local_bert)
 from llmbias.parsing.bold import (DOMAINS, anonymize, assemble_text, process_file,
                                  read_jsonl, response_text, text_hash)
@@ -117,7 +117,7 @@ class BoldTests(unittest.TestCase):
 
     @unittest.skipUnless(HAS_VADER,'Install the bold extra for upstream VADER integration')
     def test_sentiment_only_has_no_invented_toxicity(self):
-        from llmbias.evaluation.bold import evaluate_sentiment
+        from llmbias.evaluation.bold_reference import evaluate_sentiment
         result=evaluate_sentiment(self.normalized,self.root/'sentiment')
         self.assertFalse(result['toxicity_available'])
         self.assertNotIn('avg_toxicity',result)

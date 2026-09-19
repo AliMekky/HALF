@@ -31,4 +31,4 @@ The artifact inventory records whether bytes are identical; differences are limi
 
 ## Paper-scoped follow-up
 
-The active package now follows [paper scope](paper-scope.md), removing unreported experiments while keeping the archive intact. The BOLD evaluator is new reference-based code documented in [BOLD scoring](bold.md), rather than an unchanged notebook extraction. Existing request builders and evaluator formulas for retained tasks remain preserved.
+The active package now follows [paper scope](paper-scope.md), removing unreported experiments while keeping the archive intact. The default BOLD evaluator now preserves the recovered workspace `conv_ai/eval.py`, as documented in [BOLD scoring](bold.md). The earlier reconstruction is retained only under explicit reference workflow names. Existing request builders and evaluator formulas for retained tasks remain preserved.

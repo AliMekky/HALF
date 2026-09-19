@@ -21,3 +21,7 @@ Run again after restoring the local artifact bundle:
 ```sh
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python3 -m unittest discover -s tests -v
 ```
+
+## Recovered BOLD implementation
+
+See [recovered BOLD validation](bold-recovered-validation.json): 58 tests pass, all eight Table 14 sentiment values agree at reported precision, and the supplied LLaMA-8B toxicity aggregate agrees. Full toxicity inference was not rerun. The earlier reconstruction report is historical.

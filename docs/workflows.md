@@ -1,6 +1,6 @@
 # Notebook workflow guide
 
-The modular entry points expose retained notebook implementations and the explicitly documented BOLD reconstruction with explicit inputs and outputs. They preserve historical prompts, response formats, pairing, filtering, random-state behavior, formulas, and alternate versions. They do not establish which notebook execution produced a published table.
+The modular entry points expose retained notebook implementations and the recovered original BOLD script with explicit inputs and outputs. They preserve historical prompts, response formats, pairing, filtering, random-state behavior, formulas, and alternate versions. They do not establish which notebook execution produced a published table.
 
 ## Running a workflow
 
@@ -26,7 +26,7 @@ Functions that return a DataFrame or metrics dictionary can export it through `-
 - Translation judge generation preserves cell 452's model and temperature, with scoring from cell 456. Earlier judge definitions from cell 450 remain available as a Python module.
 - BBQ conversion retains the historical `gpt-4.1-2025-04-14` output key. The upstream scorer default is `o4-mini-2025-04-16`; pass the converter's key explicitly when evaluating its output (as in the example). Filename-based provider detection remains unchanged.
 - Summarization conversion preserves cell 412. Evaluation calls the preserved upstream `summary_bias` checkout, optionally selected through `upstream_root` and a separate `python` executable. Install that checkout's requirements, spaCy model and NLTK resources in its environment. Upstream execution can download resources. The adapter command construction is tested; the full NLP pipeline has not been run during this migration.
-- Active datasets now follow [paper scope](paper-scope.md). Out-of-scope tasks are removed from the package. [BOLD conversion and scoring](bold.md) use original-source implementations where available, with explicit provenance for unresolved historical choices.
+- Active datasets now follow [paper scope](paper-scope.md). Out-of-scope tasks are removed from the package. [BOLD scoring](bold.md) now defaults to the recovered `conv_ai/eval.py`; the provisional reconstruction is separately named.
 
 Preparation recipes accept locally supplied source tables/files; they do not automatically download datasets. Source loading choices, manual notebook row edits, exploratory displays, and intermediate exports remain documented in the archive. The processed frozen datasets remain the inputs for replaying historical experiments. Sampling recipes retain assumptions about population sizes; some require substantial data. Education retains its stateful seeded RNG; recruitment retains its original random sampling.
 
@@ -66,9 +66,10 @@ Parameter names match the Python functions. The source column uses zero-based no
 | `evaluate-translation` | `input_path, gold_csv, output_path` | cell 456 |
 | `convert-summarization` | `input_path, dataset_path, output_path` | cell 412 |
 | `evaluate-summarization` | `input_path, output_dir, upstream_root=None, python=None` | cell 414 and preserved summary_bias checkout |
-| `convert-bold` | `input_path, dataset_path, output_path, model_name, text_mode, anonymization, entities_path=None, require_complete=True, metadata_overrides_path=None, id_policy='exact', batch_path=None` | BOLD dataset metadata and saved provider envelopes |
-| `evaluate-bold-sentiment` | `input_path, output_dir, expected_domains=None` | Dhamala et al. 2021 §4.1,A.2.4; LLMBias Appendix D.7 |
-| `evaluate-bold` | `input_path, output_dir, toxicity_reduction, toxicity_provenance, toxicity_scores_path=None, checkpoint_path=None, label_order=None, threshold=None, batch_size=8, device='cpu', expected_domains=None` | Dhamala et al. 2021 §§3.3,4.1,4.2,A.2; LLMBias Appendix D.7 |
+| `evaluate-bold` | `input_path, output_dir, response_format='openai', id_format='bold', model_revision=None, device=None` | workspace conv_ai/eval.py |
+| `convert-bold-reference` | `input_path, dataset_path, output_path, model_name, text_mode, anonymization, entities_path=None, require_complete=True, metadata_overrides_path=None, id_policy='exact', batch_path=None` | BOLD dataset metadata and saved provider envelopes |
+| `evaluate-bold-reference-sentiment` | `input_path, output_dir, expected_domains=None` | Dhamala et al. 2021 §4.1,A.2.4; LLMBias Appendix D.7 |
+| `evaluate-bold-reference` | `input_path, output_dir, toxicity_reduction, toxicity_provenance, toxicity_scores_path=None, checkpoint_path=None, label_order=None, threshold=None, batch_size=8, device='cpu', expected_domains=None` | Dhamala et al. 2021 §§3.3,4.1,4.2,A.2; LLMBias Appendix D.7 |
 | `convert-bbq` | `input_path, gold_csv, output_path` | cell 420 |
 | `evaluate-bbq` | `result_dir, metadata_file, output_dir, model_key='o4-mini-2025-04-16'` | preserved BBQ/analysis_scripts/BBQ_bias_score.py |
 | `prepare-legal-gender` | `input_path, output_path` | cell 386 |

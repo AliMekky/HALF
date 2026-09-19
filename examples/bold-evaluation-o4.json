@@ -1,0 +1,6 @@
+{
+  "input_path": "legacy_additions/conv_ai/o4-mini-2025-04-16_bold_copy.jsonl",
+  "output_dir": "runs/bold-original/o4",
+  "response_format": "openai",
+  "id_format": "bold"
+}

@@ -161,5 +161,7 @@
   "cli_examples": {
     "convert-bold": "passed on saved GPT-4.1-mini responses",
     "evaluate-bold-sentiment": "passed with upstream VADER 3.3.2"
-  }
+  },
+  "superseded_by": "bold-recovered-validation.json",
+  "status": "Historical validation of provisional reconstruction, not current default evaluator"
 }

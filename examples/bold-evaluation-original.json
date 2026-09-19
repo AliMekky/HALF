@@ -1,0 +1,6 @@
+{
+  "input_path": "legacy_additions/conv_ai/Meta-Llama-3.1-8B-Instruct_bold.jsonl",
+  "output_dir": "runs/bold-original/llama8b",
+  "response_format": "openai",
+  "id_format": "bold"
+}

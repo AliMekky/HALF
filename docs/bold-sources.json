@@ -21,7 +21,19 @@
   },
   "bert_adapter": {
     "reference_implementation": "https://github.com/huggingface/transformers/blob/v4.46.3/src/transformers/models/bert/modeling_bert.py",
-    "trained_checkpoint_located": false
+    "trained_checkpoint_located": false,
+    "status": "Superseded reference-only reconstruction; not the project evaluator"
   },
-  "historical_table14_reproduced": false
+  "historical_table14_reproduced": false,
+  "recovered_project_evaluator": {
+    "source": "../conv_ai/eval.py",
+    "sha256": "4146d6ba82be0e3766cf9f557d40a1252ffb646e4513b89a8a82695122c8c288",
+    "model": "unitary/toxic-bert",
+    "text": "raw response",
+    "grouping": "original request-ID categories",
+    "historical_revision_pinned": false,
+    "default_workflow": "evaluate-bold"
+  },
+  "sentiment_table14_reproduced": true,
+  "toxicity_table14_recomputed": false
 }

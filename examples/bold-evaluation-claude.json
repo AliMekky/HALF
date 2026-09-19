@@ -1,0 +1,6 @@
+{
+  "input_path": "legacy_additions/conv_ai/claude_bold.jsonl",
+  "output_dir": "runs/bold-original/claude",
+  "response_format": "anthropic",
+  "id_format": "short"
+}

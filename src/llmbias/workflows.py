@@ -51,9 +51,10 @@ register("prepare-translation-judge", "preparation.translation_judge:create_batc
 register("evaluate-translation", "evaluation.translation:evaluate", "cell 456")
 register("convert-summarization", "parsing.summarization:process_file", "cell 412")
 register("evaluate-summarization", "evaluation.summary_adapter:evaluate", "cell 414 and preserved summary_bias checkout", note="Requires external NLP environment/resources; explicitly runs upstream tools.")
-register("convert-bold", "parsing.bold:process_file", "BOLD dataset metadata and saved provider envelopes")
-register("evaluate-bold-sentiment", "evaluation.bold:evaluate_sentiment", "Dhamala et al. 2021 §4.1,A.2.4; LLMBias Appendix D.7")
-register("evaluate-bold", "evaluation.bold:evaluate", "Dhamala et al. 2021 §§3.3,4.1,4.2,A.2; LLMBias Appendix D.7", note="Explicit text policy and toxicity provenance required; see docs/bold.md.")
+register("evaluate-bold", "evaluation.bold:evaluate", "workspace conv_ai/eval.py", note="Original raw-response VADER/unitary-toxic-bert scoring; see docs/bold.md.")
+register("convert-bold-reference", "parsing.bold:process_file", "BOLD dataset metadata and saved provider envelopes")
+register("evaluate-bold-reference-sentiment", "evaluation.bold_reference:evaluate_sentiment", "Dhamala et al. 2021 §4.1,A.2.4; LLMBias Appendix D.7")
+register("evaluate-bold-reference", "evaluation.bold_reference:evaluate", "Dhamala et al. 2021 §§3.3,4.1,4.2,A.2; LLMBias Appendix D.7", note="Explicit text policy and toxicity provenance required; see docs/bold.md.")
 register("convert-bbq", "parsing.bbq:process_file", "cell 420")
 register("evaluate-bbq", "evaluation.bbq:evaluate", "preserved BBQ/analysis_scripts/BBQ_bias_score.py")
 register("prepare-legal-gender", "preparation.legal_gender:create_batch", "cell 386")
@@ -99,7 +100,7 @@ TASK_COVERAGE = {
     "mt_gender": {"generation": True, "evaluation": "evaluate-translation", "parsing": "judge outputs; prepare-translation-judge uses historical judge settings"},
     "ontonotes": {"generation": True, "evaluation": "evaluate-summarization (external dependencies)", "parsing": "convert-summarization"},
     "bbq": {"generation": True, "evaluation": "evaluate-bbq", "parsing": "convert-bbq"},
-    "bold": {"generation": True, "evaluation": "evaluate-bold (reference-based reconstruction; original toxicity checkpoint unlocated)", "parsing": "convert-bold", "paper": "Table 14; Appendix D.7"},
+    "bold": {"generation": True, "evaluation": "evaluate-bold (recovered conv_ai/eval.py; unitary/toxic-bert)", "parsing": "original provider-specific raw-response extraction", "paper": "Table 14; Appendix D.7"},
 }
 
 
