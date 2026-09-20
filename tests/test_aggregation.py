@@ -12,8 +12,8 @@ ROOT = Path(__file__).resolve().parents[1]
 
 class AggregationTests(unittest.TestCase):
     def test_displayed_table_two_scores_reproduce_all_published_totals(self):
-        scores = pd.read_csv(ROOT / 'experiments/reference/table_02_scores.csv')
-        expected = json.loads((ROOT / 'experiments/reference/table_02_totals.json').read_text())['totals']
+        scores = pd.read_csv(ROOT / 'tests/fixtures/reference/table_02_scores.csv')
+        expected = json.loads((ROOT / 'tests/fixtures/reference/table_02_totals.json').read_text())['totals']
         for row in aggregate(scores).to_dict('records'):
             self.assertEqual(round(row['naive'], 2), expected[row['model']]['naive'])
             self.assertEqual(round(row['half'], 2), expected[row['model']]['half'])

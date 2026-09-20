@@ -1,5 +1,0 @@
-{
-  "input_path": "my-study/translation-judge-responses.jsonl",
-  "gold_csv": "data/processed/translation_data/mt_gender.csv",
-  "output_path": "runs/translation/scores.csv"
-}

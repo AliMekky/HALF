@@ -1,13 +1,11 @@
-include README.md LICENSE NOTICE CITATION.cff CITATION.bib
+include README.md LICENSE NOTICE CITATION.cff
 recursive-include requirements *.txt
-recursive-include docs *.md *.json
 recursive-include scripts *.py *.patch
 recursive-include examples *.json
-recursive-include experiments *.json *.csv *.md
 recursive-include tests *.py *.json *.txt *.csv
-include data/README.md data/datasets-manifest.json data/schemas.json
+include data/datasets-manifest.json
+recursive-include data/processed *.csv *.jsonl *.txt
 recursive-include third_party/notices *
-prune data/processed
 prune runs
 prune third_party/summary_bias
 global-exclude __pycache__ *.py[cod] .DS_Store

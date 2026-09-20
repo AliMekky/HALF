@@ -2,6 +2,7 @@ cff-version: 1.2.0
 message: "If you use this software, please cite the HALF paper."
 title: "HALF research code"
 type: software
+repository-code: https://github.com/AliMekky/HALF
 version: 0.1.0
 authors:
   - family-names: Mekky

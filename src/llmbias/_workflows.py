@@ -49,7 +49,7 @@ register("prepare-translation-judge", "processing.requests.translation_judge:cre
 register("evaluate-translation", "evaluation.translation.scoring:evaluate", "cell 456")
 register("convert-summarization", "processing.parsing.summarization:process_file", "cell 412")
 register("evaluate-summarization", "evaluation.summarization.scoring:evaluate", "cell 414 and preserved summary_bias checkout", note="Requires external NLP environment/resources; explicitly runs upstream tools.")
-register("evaluate-bold", "evaluation.conversational.bold:evaluate", "workspace conv_ai/eval.py", note="Original raw-response VADER/unitary-toxic-bert scoring; see docs/bold.md.")
+register("evaluate-bold", "evaluation.conversational.bold:evaluate", "workspace conv_ai/eval.py", note="Raw-response VADER/unitary-toxic-bert scoring.")
 register("convert-bbq", "processing.parsing.bbq:process_file", "cell 420")
 register("evaluate-bbq", "evaluation.conversational.bbq:evaluate", "preserved BBQ/analysis_scripts/BBQ_bias_score.py")
 register("prepare-legal-gender", "processing.requests.legal_gender:create_batch", "cell 386")

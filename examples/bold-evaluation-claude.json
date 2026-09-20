@@ -1,6 +1,0 @@
-{
-  "input_path": "runs/bold/responses/claude_bold.jsonl",
-  "output_dir": "runs/bold-original/claude",
-  "response_format": "anthropic",
-  "id_format": "short"
-}

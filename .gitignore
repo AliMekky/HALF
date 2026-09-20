@@ -12,6 +12,3 @@ dist/
 .ipynb_checkpoints/
 
 third_party/summary_bias/
-
-# Local dataset copies; publish data separately according to source access terms.
-data/processed/

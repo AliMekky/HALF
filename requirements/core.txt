@@ -1,6 +1,0 @@
-# Python 3.10 release baseline; direct dependencies and offline sentiment scoring.
-numpy==2.2.6
-pandas==2.2.3
-scipy==1.15.2
-scikit-learn==1.6.1
-vaderSentiment==3.3.2

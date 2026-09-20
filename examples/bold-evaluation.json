@@ -1,0 +1,6 @@
+{
+  "input_path": "runs/bold/responses.jsonl",
+  "output_dir": "runs/bold/results",
+  "response_format": "openai",
+  "id_format": "bold"
+}

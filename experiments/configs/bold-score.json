@@ -1,6 +1,0 @@
-{
-  "input_path": "${RESPONSES_JSONL}",
-  "output_dir": "${OUTPUT_DIR}",
-  "response_format": "${RESPONSE_FORMAT}",
-  "id_format": "${ID_FORMAT}"
-}

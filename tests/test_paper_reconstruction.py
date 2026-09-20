@@ -36,9 +36,9 @@ class NormalizationTests(unittest.TestCase):
         self.assertTrue(scores.score.eq(.5).all())
 
     def test_reference_comparison_keeps_unresolved_bbq_cells_visible(self):
-        ref=pd.read_csv(ROOT/'experiments/reference/table_02_scores.csv').set_index('model')
-        raw=pd.read_csv(ROOT/'experiments/reference/pooled_metrics.csv')
-        cal=pd.read_csv(ROOT/'experiments/reference/pooled_calibration.csv')
+        ref=pd.read_csv(ROOT/'tests/fixtures/reference/table_02_scores.csv').set_index('model')
+        raw=pd.read_csv(ROOT/'tests/fixtures/reference/pooled_metrics.csv')
+        cal=pd.read_csv(ROOT/'tests/fixtures/reference/pooled_calibration.csv')
         scores,_=normalize(raw,models=ref.index.tolist(),bbq_mode='absolute',calibration=cal)
         wide=scores.pivot(index='model',columns='dataset',values='score').reindex(index=ref.index,columns=ref.columns)
         matches=wide.round(2).eq(ref)
