@@ -1,40 +1,32 @@
-# Notebook workflow guide
+# Running paper workflows
 
-The modular entry points expose retained notebook implementations and the recovered original BOLD script with explicit inputs and outputs. They preserve historical prompts, response formats, pairing, filtering, random-state behavior, formulas, and alternate versions. They do not establish which notebook execution produced a published table.
+The sequence is: prepare data → build requests → submit through a provider →
+parse saved responses → evaluate → produce reports. Existing prompts, pairing,
+filtering, random-state behavior, and metric formulas are preserved.
 
-## Running a workflow
+- `llmbias build`: generate requests from a dataset; no API calls.
+- `llmbias run COMMAND -- ...`: provider submission and standalone parsers/scorers.
+  Append `--help` after `--` to inspect the script's arguments.
+- `llmbias workflow NAME --config CONFIG.json`: run a preparation, conversion,
+  evaluation, or reporting function using named arguments from JSON.
+- `llmbias list` and `llmbias coverage`: inspect commands and dataset coverage.
 
-Run from the repository root after installation, or prefix commands with `PYTHONPATH=src python -m llmbias.cli` in place of `llmbias`.
+Omit `--config` to inspect a workflow. Edit paths in `examples/` to your local
+inputs and saved responses. Relative paths are resolved from the working directory.
+Use fresh output locations; the workflow wrapper rejects existing output files or
+nonempty output directories. Standalone scripts retain their original I/O behavior.
+
+DataFrame arguments accept CSV, Parquet, JSON or JSONL paths. `frames` accepts a
+list of paths. Functions returning tables or dictionaries support `--output`
+(CSV or JSON respectively); omit it when the function already writes its outputs.
 
 ```sh
-llmbias list
-llmbias coverage
-llmbias workflow evaluate-translation
+llmbias workflow parse-cams-openai --config examples/cams-parsing.json
 llmbias workflow evaluate-translation --config examples/translation-evaluation.json
-llmbias workflow prepare-movielens --config examples/movielens-preparation.json --output runs/movielens.csv
 ```
 
-Edit example paths to refer to your saved inputs. Configuration files contain keyword arguments for the selected entry point, listed below. Paths are relative to your working directory. DataFrame parameters accept CSV, Parquet, JSON or JSONL file paths; `frames` in education preparation is a list of paths. Other list/dictionary parameters retain their historical structure and are supplied directly as JSON values (including `batches`, `data`, and `gt_answers` for qualitative enrichment).
-
-Functions that return a DataFrame or metrics dictionary can export it through `--output` (CSV for a DataFrame, JSON otherwise). Functions with output-path arguments write their historical output formats themselves; omit `--output` for those. The workflow dispatcher checks output paths, including defaults, and rejects existing files or nonempty output directories. Direct Python functions and older `run` scripts retain their original overwrite behavior. Run on copied inputs: some preparation functions mutate their input DataFrame.
-
-## Coverage and versions
-
-- CAMS and SAD have separate OpenAI, Anthropic and DeepSeek parsers. SAD retains both output modes and original label order. Recruitment has OpenAI and Anthropic decision parsers; no dedicated DeepSeek decision parser was found.
-- Medical bias has neutral, seven-block (1,273 responses each), cleaned-answer, and prompt-matching evaluators. They are distinct historical workflows. Medical neutral requests retain their separate prompt and temperature 0.0.
-- Recommendation cell 382 and earlier cell 379 remain separately selectable. Recruitment cell 304 and cell 306 also remain separate.
-- Translation judge generation preserves cell 452's model and temperature, with scoring from cell 456. Earlier judge definitions from cell 450 remain available as a Python module.
-- BBQ conversion retains the historical `gpt-4.1-2025-04-14` output key. The upstream scorer default is `o4-mini-2025-04-16`; pass the converter's key explicitly when evaluating its output (as in the example). Filename-based provider detection remains unchanged.
-- Summarization conversion preserves cell 412. Evaluation calls the preserved upstream `summary_bias` checkout, optionally selected through `upstream_root` and a separate `python` executable. Install that checkout's requirements, spaCy model and NLTK resources in its environment. Upstream execution can download resources. The adapter command construction is tested; the full NLP pipeline has not been run during this migration.
-- Active datasets now follow [paper scope](paper-scope.md). Out-of-scope tasks are removed from the package. [BOLD scoring](bold.md) now defaults to the recovered `conv_ai/eval.py`; the provisional reconstruction is separately named.
-
-Preparation recipes accept locally supplied source tables/files; they do not automatically download datasets. Source loading choices, manual notebook row edits, exploratory displays, and intermediate exports remain documented in the archive. The processed frozen datasets remain the inputs for replaying historical experiments. Sampling recipes retain assumptions about population sizes; some require substantial data. Education retains its stateful seeded RNG; recruitment retains its original random sampling.
-
-Plotting requires the `analysis` extra; iterative multilabel sampling and Parquet input require the `datasets` extra. The CAMS intersectional adapter temporarily changes working directory to relocate all report artifacts; run it serially. Legal preprocessing includes gender labeling and placeholder detection, not a newly invented ethnicity transformation.
-
-## Entry points and arguments
-
-Parameter names match the Python functions. The source column uses zero-based notebook cell indices.
+Source cell numbers below identify where the scientific implementation originated;
+the source notebook is not needed to execute these functions.
 
 | Workflow | Configuration arguments | Source |
 | --- | --- | --- |
@@ -58,18 +50,13 @@ Parameter names match the Python functions. The source column uses zero-based no
 | `report-cams-intersectional` | `neutral_csv, sensitive_csv, gold_csv, output_dir, save_heatmaps=True` | cell 341 |
 | `evaluate-sad` | `gold_csv, neutral_csv, sensitive_csv, model_name, output_csv_path` | cell 358 |
 | `evaluate-recruitment` | `neutral_csv, sensitive_csv, model_name` | cell 306 |
-| `evaluate-recruitment-cell304` | `model, df_neutral, df_modified` | cell 304 |
 | `evaluate-education` | `csv_dir_paths, output_dir, task='ranking', bootstrap=5000` | cell 367 |
 | `evaluate-recommendation` | `data_dir, output_dir` | cell 382 |
-| `evaluate-recommendation-cell379` | `data_dir` | cell 379 |
 | `prepare-translation-judge` | `gold_csv, translations_jsonl, output_path, model_name=JUDGE_MODEL` | cells 451,452 |
 | `evaluate-translation` | `input_path, gold_csv, output_path` | cell 456 |
 | `convert-summarization` | `input_path, dataset_path, output_path` | cell 412 |
 | `evaluate-summarization` | `input_path, output_dir, upstream_root=None, python=None` | cell 414 and preserved summary_bias checkout |
 | `evaluate-bold` | `input_path, output_dir, response_format='openai', id_format='bold', model_revision=None, device=None` | workspace conv_ai/eval.py |
-| `convert-bold-reference` | `input_path, dataset_path, output_path, model_name, text_mode, anonymization, entities_path=None, require_complete=True, metadata_overrides_path=None, id_policy='exact', batch_path=None` | BOLD dataset metadata and saved provider envelopes |
-| `evaluate-bold-reference-sentiment` | `input_path, output_dir, expected_domains=None` | Dhamala et al. 2021 §4.1,A.2.4; LLMBias Appendix D.7 |
-| `evaluate-bold-reference` | `input_path, output_dir, toxicity_reduction, toxicity_provenance, toxicity_scores_path=None, checkpoint_path=None, label_order=None, threshold=None, batch_size=8, device='cpu', expected_domains=None` | Dhamala et al. 2021 §§3.3,4.1,4.2,A.2; LLMBias Appendix D.7 |
 | `convert-bbq` | `input_path, gold_csv, output_path` | cell 420 |
 | `evaluate-bbq` | `result_dir, metadata_file, output_dir, model_key='o4-mini-2025-04-16'` | preserved BBQ/analysis_scripts/BBQ_bias_score.py |
 | `prepare-legal-gender` | `input_path, output_path` | cell 386 |
@@ -95,15 +82,16 @@ Parameter names match the Python functions. The source column uses zero-based no
 | `enrich-deepseek` | `outputs, batches` | cell 433 |
 | `enrich-flip-cases` | `detailed, data, gt_answers` | cells 495–497 |
 
-## Preservation checks
+## Execution details
 
-```sh
-PYTHONPATH=src python -m unittest discover -s tests -v
-PYTHONPATH=src python -m unittest discover -s tests -p test_notebook_workflows.py -v
-```
+BBQ conversion preserves its `gpt-4.1-2025-04-14` output key; pass the same
+`model_key` to the evaluator. The supplied example does so. Some parsers retain
+provider detection based on filenames. Recruitment includes OpenAI and Anthropic
+decision parsers; no dedicated DeepSeek decision parser was recovered.
+Medical bias workflows handle different original response layouts; choose the
+one matching your inputs, rather than treating them as interchangeable.
 
-The notebook checks use sanitized original-cell fixtures on temporary synthetic inputs and run without `legacy/`. They compare parser bytes, requests, table contents and aggregates against original source. Existing preservation tests additionally use the local artifact bundle. Optional plotting, iterative multilabel sampling, live provider APIs, and full upstream NLP execution have not been exercised end to end.
-
-`docs/notebook-extractions.json` records source cells and their hashes. `scripts/extract_notebook_workflows.py` rebuilds generated modules from the preserved notebook without executing it. Handwritten dispatchers/adapters live outside that generator. The tests execute selected original source only on temporary fixtures; they never Run All the archived notebook.
-
-Validation for this extraction: 31 tests passed with the local bundle; 22 notebook workflow tests passed from an isolated copy containing only `src/` and `tests/`, with no legacy artifacts. All 827 original-file hashes and 827 archived-copy hashes matched the migration manifest. Tests ran with the available Python 3.9.6 interpreter; the declared Python 3.10+ installation environment was not separately provisioned. Historical pandas groupby calls emit deprecation warnings and remain unchanged.
+Education retains its stateful seeded RNG; recruitment retains its original
+sampling. CAMS intersectional reporting temporarily changes the working directory
+and should run serially. Summarization requires the separate NLP resources in
+[setup](code-release.md). BOLD uses the [original project scorer](bold.md).

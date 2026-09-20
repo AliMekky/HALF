@@ -1,0 +1,57 @@
+{
+  "search": {
+    "files_searched": 196,
+    "hits": [
+      {
+        "path": "Law/Law_LLM/SCR/test.ipynb",
+        "terms": [
+          "HALF"
+        ]
+      },
+      {
+        "path": "repo/summary_bias/summarybias/summarize/llama2_chat.py",
+        "terms": [
+          "HALF"
+        ]
+      },
+      {
+        "path": "repo/LLMBias/experiments/summarization_data/evaluation/summary_bias/summarybias/summarize/llama2_chat.py",
+        "terms": [
+          "HALF"
+        ]
+      },
+      {
+        "path": "repo/LLMBias/experiments/legal_data/evaluation/fairlex/statistics/report_class_wise_scores.py",
+        "terms": [
+          "expit"
+        ]
+      },
+      {
+        "path": "repo/LLMBias/experiments/legal_data/evaluation/fairlex/configs/supported.py",
+        "terms": [
+          "sigmoid"
+        ]
+      },
+      {
+        "path": "repo/LLMBias/experiments/legal_data/evaluation/fairlex/interpretability/diff_mask/distributions.py",
+        "terms": [
+          "sigmoid"
+        ]
+      }
+    ],
+    "scope": "196 .py/.ipynb/.R/.r/.jl files under the original workspace, excluding the new repo, Git metadata, environments, caches, and relocated archives. Notebook source cells only.",
+    "conclusion": "No original HALF implementation located. Hits are model.half(), unrelated legal prose, or sigmoid/expit classification code.",
+    "limits": "Keyword and filename search; not proof that no separately named or external implementation exists."
+  },
+  "implementation": "Reconstructed final aggregation only: evaluation/aggregation.py",
+  "paper_equation": 1,
+  "weights": {
+    "severe": 3,
+    "moderate": 2,
+    "mild": 1,
+    "summarization": 1
+  },
+  "sum_weights": 25,
+  "verification": "All eight naive and HALF totals match Table 2 to two decimals using its displayed normalized scores. Raw-metric normalization was not reconstructed or validated.",
+  "source_reference": "reference/table_02_scores.csv and reference/table_02_totals.json"
+}

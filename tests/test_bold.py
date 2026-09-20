@@ -1,230 +1,152 @@
-"""Offline BOLD reference and integration checks; no model downloads or API calls."""
+"""Preservation checks against the recovered complete BOLD script."""
+import ast
+import contextlib
 import importlib.util
+import io
 import json
+import os
 from pathlib import Path
+import sys
 import tempfile
-from types import SimpleNamespace
-from unittest.mock import MagicMock
+from types import ModuleType, SimpleNamespace
 import unittest
 from unittest.mock import patch
 
 import pandas as pd
+from llmbias.evaluation.conversational.bold_metrics import analyze
+from llmbias.evaluation.conversational.bold import evaluate, summarize_domains
 
-from llmbias.evaluation.bold_reference import (LABELS, aggregate, evaluate, load_cached_scores,
-                                    reduce_toxicity, score_local_bert)
-from llmbias.parsing.bold import (DOMAINS, anonymize, assemble_text, process_file,
-                                 read_jsonl, response_text, text_hash)
-
-HAS_VADER = importlib.util.find_spec('vaderSentiment') is not None
+FIXTURES = Path(__file__).parent/'fixtures'
+SOURCE = (FIXTURES/'bold_eval_original.py.txt').read_text()
 
 
-class BoldTests(unittest.TestCase):
-    def setUp(self):
-        self.tmp = tempfile.TemporaryDirectory()
-        self.addCleanup(self.tmp.cleanup)
-        self.root = Path(self.tmp.name)
-        self.dataset = self.root/'dataset.csv'
-        self.raw = self.root/'raw.jsonl'
-        self.normalized = self.root/'normalized.jsonl'
-        self.cache = self.root/'toxicity.jsonl'
-        rows, responses = [], []
-        for i, domain_file in enumerate([*DOMAINS, 'profession_prompt.json']):
-            prompt = f'Example {i} is '
-            category, subject = f'category-{i}', f'Subject-{i}'
-            rows.append({'prompt': prompt, 'file': domain_file, 'category': category, 'subcategory':subject})
-            responses.append({'custom_id':f'request-{i}-wrong-request-model-bold-{category}-{subject}',
-                              'response':{'status_code':200, 'body':{'model':'actual-model', 'choices':[
-                                  {'finish_reason':'stop','message':{'content':'a wonderful success.'}}]}}})
-        pd.DataFrame(rows).to_csv(self.dataset,index=False)
-        self.write(self.raw, list(reversed(responses)))
-        process_file(self.raw,self.dataset,self.normalized,'study-model','full_text','none')
-        self.records = read_jsonl(self.normalized)
-        self.write(self.cache,[{'custom_id':r['custom_id'],'text_sha256':r['text_sha256'],
-                              'scores':dict.fromkeys(LABELS,0.1 + i*0.1)} for i,r in enumerate(self.records)])
+class VaderStub:
+    def polarity_scores(self, text):
+        return {'compound':(len(text)%7 - 3)/10}
 
-    def write(self,path,records):
-        path.write_text(''.join(json.dumps(r)+'\n' for r in records))
 
-    def test_join_uses_index_and_actual_model_not_file_order_or_id_model(self):
-        self.assertEqual([r['index'] for r in self.records],list(range(6)))
-        self.assertEqual({r['source_model'] for r in self.records},{'actual-model'})
-        self.assertEqual({r['model'] for r in self.records},{'study-model'})
-        self.assertEqual(self.records[0]['text'],'Example 0 is a wonderful success.')
+class ToxicityStub:
+    model = SimpleNamespace(config=SimpleNamespace(_commit_hash='test-only-revision'))
 
-    def test_anthropic_text_blocks_ignore_thinking(self):
-        obj={'result':{'type':'succeeded','message':{'model':'claude','stop_reason':'end_turn',
-             'content':[{'type':'thinking','thinking':'private reasoning'},{'type':'text','text':'Hello'},
-                        {'type':'text','text':' world'}]}}}
-        self.assertEqual(response_text(obj),('Hello world','claude'))
+    def __call__(self, text):
+        return [[{'label':'insult','score':0.99},{'label':'TOXIC','score':len(text)/1000}]]
 
-    def test_errors_and_truncation_are_not_scored_as_neutral(self):
-        for obj in [{'error':{'message':'failed'}},{'result':{'type':'errored'}},
-                    {'response':{'status_code':429}},
-                    {'response':{'body':{'choices':[{'finish_reason':'length','message':{'content':'x'}}]}}},
-                    {'response':{'body':{'choices':[{'message':{'content':'','refusal':'no'}}]}}}]:
-            with self.subTest(obj=obj),self.assertRaises(ValueError):response_text(obj)
 
-    def test_assembly_does_not_duplicate_an_echoed_prompt(self):
-        self.assertEqual(assemble_text('A teacher is ','A teacher is helpful.','full_text'),'A teacher is helpful.')
-        self.assertEqual(assemble_text('A teacher is ','helpful.','response'),'helpful.')
-        with self.assertRaises(ValueError):assemble_text('x','y','guess')
+@contextlib.contextmanager
+def fake_dependencies(vader_factory=VaderStub, calls=None):
+    parent=ModuleType('vaderSentiment');vader=ModuleType('vaderSentiment.vaderSentiment')
+    vader.SentimentIntensityAnalyzer=vader_factory
+    transformers=ModuleType('transformers')
+    def pipeline(*args,**kwargs):
+        if calls is not None:calls.append((args,kwargs))
+        return ToxicityStub()
+    transformers.pipeline=pipeline
+    with patch.dict(sys.modules,{'vaderSentiment':parent,'vaderSentiment.vaderSentiment':vader,'transformers':transformers}):yield
 
-    def test_anonymization_is_explicit_and_boundary_aware(self):
-        self.assertEqual(anonymize('Jane Doe and Jane study Janeville.',['Jane','Jane Doe'],'gender'),
-                         'Person and Person study Janeville.')
-        self.assertEqual(anonymize('A nurse helps.',['nurse'],'profession'),'A XYZ helps.')
-        entities=self.root/'entities.json';entities.write_text(json.dumps({str(i):[f'Example {i}'] for i in range(6)}))
-        out=self.root/'masked.jsonl'
-        process_file(self.raw,self.dataset,out,'model','full_text','explicit',entities)
-        self.assertEqual(read_jsonl(out)[1]['text'],'Person is a wonderful success.')
-        entities.write_text('{}')
-        with self.assertRaisesRegex(ValueError,'Missing reviewed'):process_file(self.raw,self.dataset,self.root/'bad','m','full_text','explicit',entities)
 
-    def test_missing_duplicates_and_mismatched_metadata_fail(self):
-        original=read_jsonl(self.raw)
-        for records in [original[:-1],original+[original[0]],
-                        [{**original[0],'custom_id':'request-0-bold-wrong-subject'}]+original[1:]]:
-            self.write(self.raw,records)
-            with self.assertRaises(ValueError):process_file(self.raw,self.dataset,self.root/'bad','m','response','none')
-            self.assertFalse((self.root/'bad').exists())
+def oracle(records, response_format='openai', id_format='bold', vader_factory=VaderStub):
+    source=SOURCE
+    active='r.get("response", {}).get("body", {}).get("choices", [{}])[0].get("message", {}).get("content", "")'
+    alternatives={'anthropic':'r.get("result", {}).get("message", {}).get("content", [{}])[0].get("text", "")',
+                  'deepseek':'r.get("response", "")'}
+    if response_format != 'openai':source=source.replace('gen = '+active,'gen = '+alternatives[response_format])
+    if id_format == 'short':source=source.replace('r"bold-([^-]+)-"','r"request-\\d+-(.+?)-"')
+    with tempfile.TemporaryDirectory() as folder, fake_dependencies(vader_factory), contextlib.redirect_stdout(io.StringIO()):
+        previous=Path.cwd()
+        try:
+            os.chdir(folder)
+            Path('Meta-Llama-3.1-8B-Instruct_bold.jsonl').write_text(''.join(json.dumps(r)+'\n' for r in records))
+            exec(compile(source,'<original-conv_ai/eval.py>','exec'),{})
+            return Path('domain_metrics.csv').read_bytes(),Path('gender_polarity.csv').read_bytes()
+        finally:os.chdir(previous)
 
-    def test_request_override_and_sanitized_ids_are_explicit(self):
-        rows=pd.read_csv(self.dataset,keep_default_na=False)
-        rows.loc[0,'subcategory']='Subject.0'
-        rows.loc[0,'prompt']=''
-        rows.to_csv(self.dataset,index=False)
-        records=read_jsonl(self.raw)
-        for record in records:
-            if record['custom_id'].startswith('request-0-'):
-                record['custom_id']='request-0-category-0-Subject0'
-        self.write(self.raw,records)
-        override=self.root/'override.json'
-        override.write_text(json.dumps({'0':{'prompt':'A repaired prompt ', 'source':'synthetic saved request'}}))
-        batch=self.root/'batch.jsonl'
-        self.write(batch,[{'custom_id':f"request-{i}-category-{i}-"+('Subject.0' if i==0 else f'Subject-{i}'),
-                          'body':{'messages':[{}, {'content':'A repaired prompt ' if i==0 else f'Example {i} is '}]}}
-                         for i in range(6)])
-        with self.assertRaisesRegex(ValueError,'metadata'):
-            process_file(self.raw,self.dataset,self.root/'exact','m','response','none',metadata_overrides_path=override)
-        path=self.root/'adapted'
-        process_file(self.raw,self.dataset,path,'m','full_text','none',metadata_overrides_path=override,
-                     id_policy='anthropic_sanitized',batch_path=batch)
-        out=read_jsonl(path)[0]
-        self.assertEqual(out['text'],'A repaired prompt a wonderful success.')
-        self.assertEqual(out['metadata_override']['source'],'synthetic saved request')
-        self.assertTrue(out['conversion_sources']['batch'])
-        self.assertEqual(pd.read_csv(self.dataset,keep_default_na=False).iloc[0]['prompt'],'')
 
-    @unittest.skipUnless(HAS_VADER,'Install the bold extra for upstream VADER integration')
-    def test_sentiment_only_has_no_invented_toxicity(self):
-        from llmbias.evaluation.bold_reference import evaluate_sentiment
-        result=evaluate_sentiment(self.normalized,self.root/'sentiment')
-        self.assertFalse(result['toxicity_available'])
-        self.assertNotIn('avg_toxicity',result)
-        self.assertNotIn('toxicity',pd.read_csv(self.root/'sentiment/per_response.csv').columns)
+class OriginalBoldTests(unittest.TestCase):
+    def records(self):
+        return [{'custom_id':cid,'response':{'body':{'choices':[{'message':{'content':text}}]}}}
+                for cid,text in [('request-0-test-bold-American_actors-person','He is a father and brother.'),
+                                 ('request-1-test-bold-American_actresses-person','She helps her mother.'),
+                                 ('request-2-test-bold-science-person','A lovely discovery.'),
+                                 ('request-3-test-bold-science-person',''),('no-domain','Nothing here.')]]
 
-    @unittest.skipUnless(importlib.util.find_spec('torch'),'Install torch to test checkpoint adapter inference')
-    def test_checkpoint_adapter_preserves_multilabel_sigmoid_and_tokenization(self):
-        import torch
-        config=SimpleNamespace(classifier_dropout=0.1,hidden_dropout_prob=0.1,model_type='bert',
-            hidden_size=1024,num_hidden_layers=24,num_attention_heads=16,num_labels=6,
-            id2label=dict(enumerate(LABELS)))
-        model=MagicMock();model.config=config;model.to.return_value=model;model.eval.return_value=model
-        model.return_value=SimpleNamespace(logits=torch.tensor([[0.,1.,-1.,0.,0.,0.]]))
-        tokenizer=MagicMock();tokenizer.do_lower_case=True
-        tokenizer.return_value={'input_ids':torch.ones((1,256),dtype=torch.long)}
-        model_class=MagicMock();model_class.from_pretrained.return_value=(model,{})
-        tokenizer_class=MagicMock();tokenizer_class.from_pretrained.return_value=tokenizer
-        fake=SimpleNamespace(BertForSequenceClassification=model_class,BertTokenizer=tokenizer_class)
-        with patch.dict('sys.modules',{'transformers':fake}):
-            result=score_local_bert(['text'],self.root,list(LABELS),batch_size=1)
-            self.assertAlmostEqual(result[0]['toxic'],0.5)
-            self.assertAlmostEqual(result[0]['severe_toxic'],0.7310586,places=6)
-            tokenizer.assert_called_with(['text'],padding='max_length',truncation=True,max_length=256,return_tensors='pt')
-            self.assertTrue(model_class.from_pretrained.call_args.kwargs['local_files_only'])
-            model_class.from_pretrained.return_value=(model,{'missing_keys':['classifier.weight']})
-            with self.assertRaisesRegex(ValueError,'uninitialized'):score_local_bert(['text'],self.root,list(LABELS))
-            model_class.from_pretrained.return_value=(model,{})
-            config.hidden_size=768
-            with self.assertRaisesRegex(ValueError,'BERT-Large'):score_local_bert(['text'],self.root,list(LABELS))
+    def test_full_source_csv_equivalence(self):
+        expected=oracle(self.records())
+        frames=analyze(self.records(),VaderStub(),ToxicityStub())
+        self.assertEqual(expected,tuple(f.to_csv(index=False).encode() for f in frames))
+        self.assertIn('unknown',set(frames[0].domain))
+        self.assertAlmostEqual(frames[0].loc[frames[0].domain=='American_actors','avg_toxicity'].iloc[0],0.027)
 
-    def test_reductions_are_distinct_and_explicit(self):
-        scores=dict.fromkeys(LABELS,0.1);scores['threat']=0.8
-        self.assertEqual(reduce_toxicity(scores,'any_label_rate',0.5),1.0)
-        self.assertEqual(reduce_toxicity(0.2,'precomputed'),0.2)
-        for scores,reduction,threshold in [(scores,'any_label_rate',None),(0.2,'precomputed',0.5),
-                                          ({'toxic':0.2},'any_label_rate',0.5),(float('nan'),'precomputed',None),
-                                          (1.1,'precomputed',None)]:
-            with self.assertRaises(ValueError):reduce_toxicity(scores,reduction,threshold)
+    def test_commented_provider_alternatives_preserved(self):
+        for provider in ['anthropic','deepseek']:
+            records=[]
+            for entry in self.records()[:3]:
+                cid=entry['custom_id'].replace('-test-bold-','-')
+                text=entry['response']['body']['choices'][0]['message']['content']
+                record={'custom_id':cid}
+                if provider=='deepseek':record['response']=text
+                else:record['result']={'message':{'content':[{'text':text}]}}
+                records.append(record)
+            with self.subTest(provider=provider):
+                expected=oracle(records,provider,'short')
+                actual=analyze(records,VaderStub(),ToxicityStub(),provider,'short')
+                self.assertEqual(expected,tuple(f.to_csv(index=False).encode() for f in actual))
 
-    def test_cached_scores_match_ids_and_exact_scored_text(self):
-        entries=read_jsonl(self.cache);self.write(self.cache,list(reversed(entries)))
-        self.assertAlmostEqual(load_cached_scores(self.cache,self.records)[0]['toxic'],0.1)
-        entries[0]['text_sha256']=text_hash('another text');self.write(self.cache,entries)
-        with self.assertRaisesRegex(ValueError,'hash mismatch'):load_cached_scores(self.cache,self.records)
-        self.write(self.cache,entries[1:])
-        with self.assertRaisesRegex(ValueError,'IDs'):load_cached_scores(self.cache,self.records)
+    def test_original_functions_are_preserved(self):
+        from llmbias.evaluation.conversational import bold_metrics as bold_original
+        moved=ast.parse(Path(bold_original.__file__).read_text())
+        fn=next(n for n in moved.body if isinstance(n,ast.FunctionDef) and n.name=='analyze')
+        definitions={n.name:n for n in fn.body if isinstance(n,ast.FunctionDef)}
+        for node in ast.parse(SOURCE).body:
+            if isinstance(node,ast.FunctionDef):self.assertEqual(ast.dump(node),ast.dump(definitions[node.name]))
 
-    def test_domain_macro_not_prompt_weighted_mean(self):
-        rows,domains,categories,overall=aggregate(self.records,[1,0,0,0,0,1],[1,0,0,0,0,1],list(DOMAINS.values()))
-        self.assertAlmostEqual(overall['avg_sentiment'],0.2)
-        self.assertAlmostEqual(overall['avg_toxicity'],0.2)
-        self.assertAlmostEqual(rows.sentiment.mean(),1/3)
-        self.assertEqual(len(domains),5)
-        with self.assertRaisesRegex(ValueError,'partial'):aggregate(self.records[:2],[0,0],[0,0],list(DOMAINS.values()))
+    def test_missing_toxic_label_fallback(self):
+        frames=analyze(self.records(),VaderStub(),lambda text:[ [{'label':'other','score':0.9}] ])
+        self.assertEqual(frames[0].avg_toxicity.tolist(),[0.0]*4)
 
-    def test_missing_toxicity_model_cannot_fall_back(self):
-        with self.assertRaisesRegex(ValueError,'exactly one'):evaluate(self.normalized,self.root/'out','precomputed',{'source':'test','model':'test'})
-        self.assertFalse((self.root/'out').exists())
+    def test_default_model_and_outputs_match_script(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder);input_path=root/'input.jsonl'
+            input_path.write_text(''.join(json.dumps(r)+'\n' for r in self.records()))
+            calls=[]
+            with fake_dependencies(calls=calls):result=evaluate(input_path,root/'output')
+            self.assertEqual(calls,[(('text-classification',),{'model':'unitary/toxic-bert','return_all_scores':True})])
+            expected=oracle(self.records())
+            self.assertEqual((root/'output/domain_metrics.csv').read_bytes(),expected[0])
+            self.assertEqual((root/'output/gender_polarity.csv').read_bytes(),expected[1])
+            self.assertEqual(result['groups'],4)
+            manifest=json.loads((root/'output/provenance.json').read_text())
+            self.assertEqual(manifest['toxicity']['resolved_revision'],'test-only-revision')
+            with self.assertRaises(FileExistsError):evaluate(input_path,root/'output')
 
-    @unittest.skipUnless(HAS_VADER,'Install the bold extra for upstream VADER integration')
-    def test_real_vader_and_cached_toxicity_end_to_end(self):
+    def test_request_batches_rejected_before_model_loading(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder);source=root/'requests.jsonl'
+            source.write_text(json.dumps({'method':'POST','url':'/v1/chat/completions','body':{}})+'\n')
+            calls=[]
+            with fake_dependencies(calls=calls),self.assertRaisesRegex(ValueError,'generation requests'):
+                evaluate(source,root/'output')
+            self.assertEqual(calls,[])
+            self.assertFalse((root/'output').exists())
+
+    def test_saved_summary_agrees_with_paper_rounding(self):
+        summary=summarize_domains(pd.read_csv(FIXTURES/'bold_saved_domain_metrics.csv'))
+        self.assertEqual(summary['count'],1000)
+        self.assertEqual(summary['groups'],41)
+        self.assertEqual(round(summary['avg_sentiment'],3),0.124)
+        self.assertEqual(round(summary['avg_toxicity']*1000,2),1.20)
+
+    def test_default_workflow_is_original(self):
+        from llmbias._workflows import WORKFLOWS
+        self.assertEqual(WORKFLOWS['evaluate-bold'].target,'evaluation.conversational.bold:evaluate')
+        self.assertIn('conv_ai/eval.py',WORKFLOWS['evaluate-bold'].source)
+        self.assertNotIn('evaluate-bold-reference', WORKFLOWS)
+
+    @unittest.skipUnless(importlib.util.find_spec('vaderSentiment'),'Install bold extra for real VADER preservation check')
+    def test_real_vader_matches_original_script(self):
         from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
-        out=self.root/'out'
-        result=evaluate(self.normalized,out,'any_label_rate',{'source':'synthetic test only','model':'fixture'},toxicity_scores_path=self.cache,threshold=0.5)
-        analyzer=SentimentIntensityAnalyzer()
-        expected=[analyzer.polarity_scores(r['text'])['compound'] for r in self.records]
-        self.assertAlmostEqual(result['avg_sentiment'],sum(expected)/6)
-        self.assertAlmostEqual(result['avg_toxicity'],(0.5+0+0+0+1)/5)
-        self.assertEqual(len(pd.read_csv(out/'per_response.csv')),6)
-        manifest=json.loads((out/'provenance.json').read_text())
-        self.assertEqual(manifest['sentiment']['version'],'3.3.2')
-        self.assertFalse(manifest['historical_table14_reproduced'])
-        self.assertEqual(load_cached_scores(out/'toxicity_scores.jsonl',self.records),load_cached_scores(self.cache,self.records))
-        self.write(self.cache,[{'custom_id':r['custom_id'],'text_sha256':r['text_sha256'],'toxicity':0.2} for r in self.records])
-        cached=evaluate(self.normalized,self.root/'scalar','precomputed',{'source':'synthetic scalar','model':'fixture'},toxicity_scores_path=self.cache)
-        self.assertAlmostEqual(cached['avg_toxicity'],0.2)
-        with self.assertRaises(FileExistsError):evaluate(self.normalized,out,'any_label_rate',{'source':'test','model':'test'},toxicity_scores_path=self.cache,threshold=0.5)
-
-    @unittest.skipUnless(HAS_VADER,'Install the bold extra for upstream VADER integration')
-    def test_upstream_vader_published_example(self):
-        from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
-        # cjhutto/vaderSentiment README's documented compound score.
-        self.assertEqual(SentimentIntensityAnalyzer().polarity_scores('VADER is smart, handsome, and funny.')['compound'],0.8316)
-
-    def test_local_checkpoint_arguments_and_architecture_rejected(self):
-        # No downloads or random classifier may substitute for a supplied model.
-        with self.assertRaises(ValueError):score_local_bert(['text'],str(self.root/'absent'),list(LABELS))
+        expected=oracle(self.records(),vader_factory=SentimentIntensityAnalyzer)
+        actual=analyze(self.records(),SentimentIntensityAnalyzer(),ToxicityStub())
+        self.assertEqual(expected,tuple(f.to_csv(index=False).encode() for f in actual))
 
 
-class PaperScopeTests(unittest.TestCase):
-    def test_registry_covers_exactly_published_experiments(self):
-        from llmbias.registry import functions
-        from llmbias.workflows import WORKFLOWS,TASK_COVERAGE
-        expected={'CAMS','SAD','medbullets','medical_bias','movielens','djinni','education_ranking','mt_gender','ecthr','ontonotes','bold','bbq'}
-        self.assertEqual(set(functions),expected)
-        self.assertEqual(set(TASK_COVERAGE),expected)
-        self.assertIn('evaluate-bold',WORKFLOWS)
-        for command in ['prepare-biasmd','prepare-disease-buster','prepare-mental-joint-labels',
-                        'prepare-mental-single-label','prepare-admission-sample','prepare-admission-fields']:
-            self.assertNotIn(command,WORKFLOWS)
-
-    def test_excluded_tasks_rejected_before_reading_data(self):
-        from llmbias.cli import build
-        for task in ['dreaddit','education_ga','diasafety','education_ranking_generation']:
-            with self.assertRaisesRegex(ValueError,'outside the paper scope'):
-                build(task,'model','unused','nonexistent')
-
-
-if __name__ == '__main__':
-    unittest.main()
+if __name__=='__main__':unittest.main()

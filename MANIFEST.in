@@ -1,0 +1,14 @@
+include README.md LICENSE NOTICE CITATION.cff CITATION.bib
+recursive-include requirements *.txt
+recursive-include docs *.md *.json
+recursive-include scripts *.py *.patch
+recursive-include examples *.json
+recursive-include experiments *.json *.csv *.md
+recursive-include tests *.py *.json *.txt *.csv
+include data/README.md data/datasets-manifest.json data/schemas.json
+recursive-include third_party/notices *
+prune data/processed
+prune runs
+prune third_party/summary_bias
+global-exclude __pycache__ *.py[cod] .DS_Store
+include .github/workflows/tests.yml

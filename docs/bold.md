@@ -1,22 +1,18 @@
-# Recovered BOLD evaluation
+# BOLD evaluation
 
-`evaluate-bold` now runs the implementation recovered from **workspace `conv_ai/eval.py`**, outside the previously inspected `repo/LLMBias` directory. Its source is preserved in `tests/fixtures/bold_eval_original.py.txt`; a hash-verified local copy of the entire newly supplied folder is in ignored `legacy_additions/conv_ai/`. The original folder is untouched.
-
-## Run
+`evaluate-bold` preserves the original project `conv_ai/eval.py` scoring logic.
+It consumes raw provider response JSONL. Edit the example input path to the
+responses from your run:
 
 ```sh
 pip install -e '.[bold-model]'
 llmbias workflow evaluate-bold --config examples/bold-evaluation-original.json
-# Other saved response formats, explicitly selected from alternatives in eval.py:
-llmbias workflow evaluate-bold --config examples/bold-evaluation-claude.json
-llmbias workflow evaluate-bold --config examples/bold-evaluation-deepseek.json
 ```
 
-The original workflow consumes **raw response JSONL**, not the normalized records used by the earlier reconstruction. Restore `legacy_additions/` when using a fresh clone, or edit the input path. Optional model downloads occur only when evaluation is invoked. Imports and workflow discovery do not load a model or submit inference requests to generation providers.
-
-**o4-mini file selection:** in this newly supplied folder, `o4-mini-2025-04-16_bold.jsonl` contains generation requests; the corresponding responses are in `o4-mini-2025-04-16_bold_copy.jsonl`. Use `examples/bold-evaluation-o4.json`. The wrapper rejects request batches before loading the model.
-
-All outputs go to a fresh `output_dir`: original `domain_metrics.csv` and `gender_polarity.csv`, plus the new `overall.json` and `provenance.json` reporting files.
+Examples also cover Anthropic, DeepSeek, and o4 responses. Pass responses, not
+request batches; the wrapper rejects request-only inputs before model loading.
+Outputs are `domain_metrics.csv`, `gender_polarity.csv`, `overall.json`, and
+`provenance.json`, written into a fresh output directory.
 
 ## Preserved behavior
 
@@ -27,22 +23,13 @@ All outputs go to a fresh `output_dir`: original `domain_metrics.csv` and `gende
 - **Parsing:** default `response_format="openai"`, `id_format="bold"` preserves the active code. `response_format="anthropic"` or `"deepseek"` and `id_format="short"` select the commented extraction alternatives found in the source. Formats are never silently inferred. Existing empty-text handling and parsing failure behavior remain intact.
 - **Model settings:** no `device`, model revision, or truncation argument is supplied by default, matching the actual source call. The source's “force CPU” comment has no corresponding argument. Optional explicit `device=-1` or `model_revision` is recorded in provenance rather than described as an original setting.
 
-`evaluation/bold_original.py` holds the extracted calculation functions and loop; `evaluation/bold.py` provides dependency initialization, paths, output protection, and run metadata. The three metric function bodies are AST-equivalent to their originals. Classifier objects can be injected into the calculation function for deterministic preservation tests.
+`evaluation/conversational/bold_metrics.py` holds the extracted calculation functions and loop; `evaluation/conversational/bold.py` provides dependency initialization, paths, output protection, and run metadata. The three metric function bodies are AST-equivalent to their originals. Classifier objects can be injected into the calculation function for deterministic preservation tests.
 
-## Relationship to Table 14
+## Overall reporting
 
-The original script exports group tables and does not implement a final overall mean. The new reporting wrapper takes an **unweighted arithmetic mean of its group means**. Evidence for this reporting choice:
-
-- Mean of the supplied LLaMA-8B `domain_metrics.csv`: sentiment **0.12364867799499465**, toxicity **0.0011971413677312318**. These round to Table 14's **0.124** and **1.20 × 10⁻³**.
-- VADER was rerun with the recovered parser/grouping on all eight supplied primary response files, including DeepSeek. All eight sentiment values match Table 14 at three decimal places. Results are recorded in [validation](bold-recovered-validation.json).
-- The rerun LLaMA-8B per-group sentiment and gender-polarity tables agree with the supplied CSVs.
-
-The inferred overall aggregation is labeled separately from the verbatim source logic. It differs from the PDF's stated macro-average over five topical domains; this integration preserves the recovered implementation rather than changing it to match the prose. The earlier mismatch with Table 14 came from using that five-domain reconstruction.
-
-**Full toxicity inference across all eight models has not been rerun.** Deterministic tests compare the original and extracted scripts' CSV bytes using the same controlled classifier, including the exact model initialization arguments and toxic-label selection. Saved toxicity aggregates provide evidence for the LLaMA-8B row only. The source does not pin package versions or a model revision; each new real run records the resolved revision when available. Matching the saved aggregate is not proof of a new checkpoint inference reproduction.
-
-## Earlier reconstruction
-
-The provisional BOLD implementation remains explicitly named `evaluate-bold-reference`, `evaluate-bold-reference-sentiment`, and `convert-bold-reference`, with its code in `evaluation/bold_reference.py`. It is not the default or the historical evaluator. Its explicit metadata overrides, anonymization, and BERT-Large checkpoint adapter do not apply to `evaluate-bold`.
-
-See [the superseded reference notes](bold-reference.md) for that separate implementation. The external original BOLD paper remains relevant background, but the recovered project script establishes the actual evaluation choices used here.
+The original script exports group tables. The wrapper reports their unweighted
+mean, matching the supplied LLaMA-8B saved aggregate at the paper's precision.
+This aggregation is inferred from the implementation and saved outputs; it differs
+from the PDF's wording about five topical domains. The implementation is preserved.
+Full toxicity inference across all models has not been rerun. Original model
+revisions were not recorded; new runs record the resolved revision when available.

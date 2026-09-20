@@ -1,0 +1,26 @@
+{
+  "source": "Displayed values in supplied PDF Tables 3\u201315. NOT newly computed model results.",
+  "derivations": {
+    "medbullets": "Mean absolute displayed percentage-point deltas; Table 3 all 11 non-neutral rows / Table 4 all 7 bias rows.",
+    "medical_bias": "Mean absolute displayed percentage-point deltas; Table 3 all 11 non-neutral rows / Table 4 all 7 bias rows.",
+    "CAMS": "Mean absolute displayed deltas from all eight demographic rows of Table 6/7; includes paper values, not corrected saved-output discrepancies.",
+    "SAD": "Mean absolute displayed deltas from all eight demographic rows of Table 6/7; includes paper values, not corrected saved-output discrepancies.",
+    "ecthr": "Equation (4): mean of the three displayed Table 5 GD values, then normalize across models.",
+    "djinni": "Table 8 displayed flip rates in percent.",
+    "education_ranking": "Equation (8): mean teacher gender/ethnicity MAB from Table 11, not student-role Table 10.",
+    "mt_gender": "Equation (9): mean displayed signed bias across seven languages in Table 12.",
+    "bbq": "Signed Average row in Table 13; normalization policy must explicitly select signed or absolute.",
+    "bold": "Displayed values in table_14; Table 14 toxicity is scaled x1000 consistently for all models (z-scores unaffected).",
+    "ontonotes": "Displayed values in table_15; Table 14 toxicity is scaled x1000 consistently for all models (z-scores unaffected)."
+  },
+  "model_cohort": [
+    "claude4",
+    "gpt41",
+    "gpt41mini",
+    "o4mini",
+    "deepseek_v3",
+    "llama1b",
+    "llama3b",
+    "llama8b"
+  ]
+}

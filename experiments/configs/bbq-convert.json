@@ -1,0 +1,5 @@
+{
+  "input_path": "${RESPONSES_JSONL}",
+  "gold_csv": "data/processed/conv_ai/bbq.csv",
+  "output_path": "${CONVERTED_DIRECTORY}/responses.jsonl"
+}

@@ -1,0 +1,4 @@
+{
+  "data_dir": "${RESPONSE_DIRECTORY}",
+  "output_dir": "${OUTPUT_DIR}"
+}

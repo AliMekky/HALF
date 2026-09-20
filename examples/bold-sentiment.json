@@ -1,4 +1,0 @@
-{
-  "input_path": "runs/bold-gpt41mini/normalized.jsonl",
-  "output_dir": "runs/bold-gpt41mini/sentiment"
-}

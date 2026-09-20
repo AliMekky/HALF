@@ -1,0 +1,138 @@
+{
+  "source": "repo/LLMBias",
+  "files": [
+    {
+      "source": "admission_data/djinni.csv",
+      "destination": "data/processed/admission_data/djinni.csv",
+      "role": "paper-input",
+      "bytes": 2969329,
+      "sha256": "ffd73cc5dc349ea70184c06bf3bf0b496f554235a7987470237be3aa0b65b187"
+    },
+    {
+      "source": "conv_ai/BOLD.csv",
+      "destination": "data/processed/conv_ai/bold.csv",
+      "role": "paper-input",
+      "bytes": 98704,
+      "sha256": "e2896cb2b5e3670afbd4e4349d3c9f1741d8d5a42dbc5088953597e9e1c9eb72"
+    },
+    {
+      "source": "conv_ai/bbq.csv",
+      "destination": "data/processed/conv_ai/bbq.csv",
+      "role": "paper-input",
+      "bytes": 655561,
+      "sha256": "ce8f471c00326cea492ad0bb8788c8a54ba1c917b24cf9f7a0428b0866b1c27d"
+    },
+    {
+      "source": "education_data/education_ranking.csv",
+      "destination": "data/processed/education_data/education_ranking.csv",
+      "role": "paper-input",
+      "bytes": 3586664,
+      "sha256": "0f8845f00ca2b92c82dc4f254529cf06d7e074f7e99e81598ceb3dc160b11bae"
+    },
+    {
+      "source": "legal_data/ecthr.csv",
+      "destination": "data/processed/legal_data/ecthr.csv",
+      "role": "paper-input",
+      "bytes": 11926055,
+      "sha256": "a54aa2a45c964f88ac9f5377d930cb2eb63ea413e35b714957cf9cd237ad5392"
+    },
+    {
+      "source": "medical_data/medbullets.csv",
+      "destination": "data/processed/medical_data/medbullets.csv",
+      "role": "paper-input",
+      "bytes": 1185010,
+      "sha256": "10a3738e9786eb9b8cb0c571bdf3d6c7686f0730c7f74d2f6866f422208b1dc8"
+    },
+    {
+      "source": "medical_data/medical_bias.csv",
+      "destination": "data/processed/medical_data/medical_bias.csv",
+      "role": "paper-input",
+      "bytes": 11292927,
+      "sha256": "c1fc7a87b4e8bdde9232ff38aa63d166635fb90430f3b0b4896e25b7f61f514e"
+    },
+    {
+      "source": "medical_data/medical_bias_gt.jsonl",
+      "destination": "data/processed/medical_data/medical_bias_gt.jsonl",
+      "role": "supporting-input",
+      "bytes": 1325785,
+      "sha256": "cfa75cbcc53c29b023752b0a395ff49d8202121041392735ae44771a5ec734a3"
+    },
+    {
+      "source": "mental_health_data/CAMS.csv",
+      "destination": "data/processed/mental_health_data/CAMS.csv",
+      "role": "paper-input",
+      "bytes": 1928057,
+      "sha256": "8ed7ac0ef97a19aaccd1ff1626dc765d6b6a48c25ad75c30b50f6b7be4facd0d"
+    },
+    {
+      "source": "mental_health_data/SAD.csv",
+      "destination": "data/processed/mental_health_data/SAD.csv",
+      "role": "paper-input",
+      "bytes": 212952,
+      "sha256": "7548a524c5a2bfd4a0c5820eed60510d90f5a5fc57d49afe5b97ee4150d48868"
+    },
+    {
+      "source": "recommendation_system/movielens.csv",
+      "destination": "data/processed/recommendation_system/movielens.csv",
+      "role": "paper-input",
+      "bytes": 339510,
+      "sha256": "203b2998bc8cfe7c670824cad3a45acbd3f3989f5200e364e488037b292efa64"
+    },
+    {
+      "source": "summarization_data/onto-nw_gender_balanced_1.jsonl",
+      "destination": "data/processed/summarization_data/onto-nw_gender_balanced_1.jsonl",
+      "role": "supporting-input",
+      "bytes": 5568359,
+      "sha256": "ed54f7d8e03ed253311159c409880e1ca504b0ecaa60d6d983628646be13b8e7"
+    },
+    {
+      "source": "summarization_data/ontonotes.csv",
+      "destination": "data/processed/summarization_data/ontonotes.csv",
+      "role": "paper-input",
+      "bytes": 5528684,
+      "sha256": "516bbb334901d59d67d63fe832a1bec3e22a246ea8dbff43f635ed2507ea0506"
+    },
+    {
+      "source": "summarization_data/variant_0.jsonl",
+      "destination": "data/processed/summarization_data/variant_0.jsonl",
+      "role": "supporting-input",
+      "bytes": 2780427,
+      "sha256": "d3ddf26e725ab185a419e3a8bca86c55c88da5502bc11c30fa78dc7650dc38ee"
+    },
+    {
+      "source": "summarization_data/variant_1.jsonl",
+      "destination": "data/processed/summarization_data/variant_1.jsonl",
+      "role": "supporting-input",
+      "bytes": 2780100,
+      "sha256": "acb2af54a0edd8004ef08bb804ddb7ef84ad23a3e344d363ce6c9918960afa69"
+    },
+    {
+      "source": "translation_data/en_anti.txt",
+      "destination": "data/processed/translation_data/en_anti.txt",
+      "role": "supporting-input",
+      "bytes": 144358,
+      "sha256": "da3e5744ed70481c80333a082f06fa6696be5db20c12a48a74845b245ce502e1"
+    },
+    {
+      "source": "translation_data/en_pro.txt",
+      "destination": "data/processed/translation_data/en_pro.txt",
+      "role": "supporting-input",
+      "bytes": 144395,
+      "sha256": "ed06dd39ca549f8766e4958de15afe706e4f3185c1ec580125d0c71b9f530064"
+    },
+    {
+      "source": "translation_data/mt_gender.csv",
+      "destination": "data/processed/translation_data/mt_gender.csv",
+      "role": "paper-input",
+      "bytes": 303172,
+      "sha256": "646c963740ab2d0dac75cab751b56901da3b3f338179586046bbb24a507aa1eb"
+    },
+    {
+      "source": "experiments/conv_ai/evaluation/bbq/BBQ/analysis_scripts/additional_metadata.csv",
+      "destination": "data/processed/conv_ai/bbq_additional_metadata.csv",
+      "role": "supporting-input",
+      "bytes": 5827321,
+      "sha256": "f36708416b0e7adb81b47ad1926f9c39c2beb611702b73b01e06c9b6c9ffbd3d"
+    }
+  ]
+}

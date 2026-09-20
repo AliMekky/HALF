@@ -1,4 +1,3 @@
-legacy/
 runs/
 .env
 .env.*
@@ -11,4 +10,8 @@ build/
 dist/
 .DS_Store
 .ipynb_checkpoints/
-legacy_additions/
+
+third_party/summary_bias/
+
+# Local dataset copies; publish data separately according to source access terms.
+data/processed/

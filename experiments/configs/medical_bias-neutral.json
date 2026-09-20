@@ -1,0 +1,4 @@
+{
+  "predictions_csv": "${NEUTRAL_CSV}",
+  "gold_path": "data/processed/medical_data/medical_bias_gt.jsonl"
+}

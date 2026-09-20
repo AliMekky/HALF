@@ -6,30 +6,32 @@ from pathlib import Path
 import runpy
 import sys
 
-from llmbias.paths import legacy_root
+from llmbias.data.paths import data_root
 
 COMMANDS = {
-    "create-batch": "llmbias.pipeline.create_batch",
-    "submit-openai": "llmbias.providers.openai_batch",
-    "submit-anthropic": "llmbias.providers.anthropic_batch",
+    "normalize-paper": "llmbias.evaluation.normalization",
+    "assemble-table": "llmbias.evaluation.table_assembly",
+    "evaluate-half": "llmbias.evaluation.aggregation",
+    "submit-openai": "llmbias.providers.openai",
+    "submit-anthropic": "llmbias.providers.anthropic",
     "submit-deepseek": "llmbias.providers.deepseek",
     "submit-deepinfra": "llmbias.providers.deepinfra",
-    "parse-openai": "llmbias.parsing.openai_mcq",
-    "parse-anthropic": "llmbias.parsing.claude_mcq",
-    "parse-deepseek": "llmbias.parsing.deepseek_mcq",
-    "evaluate-accuracy": "llmbias.evaluation.accuracy",
-    "evaluate-medical": "llmbias.evaluation.medical",
-    "prepare-legal-tensors": "llmbias.evaluation.legal_tensors",
-    "evaluate-legal": "llmbias.evaluation.legal",
-    "merge-summaries": "llmbias.evaluation.summarization",
+    "parse-openai": "llmbias.processing.parsing.mcq_openai",
+    "parse-anthropic": "llmbias.processing.parsing.mcq_anthropic",
+    "parse-deepseek": "llmbias.processing.parsing.mcq_deepseek",
+    "evaluate-accuracy": "llmbias.evaluation.medical.accuracy",
+    "evaluate-medical": "llmbias.evaluation.medical.scoring",
+    "prepare-legal-tensors": "llmbias.evaluation.legal.tensors",
+    "evaluate-legal": "llmbias.evaluation.legal.scoring",
+    "merge-summaries": "llmbias.processing.parsing.summarization_merge",
 }
 
 
 def build(dataset, model, output_dir, data_root):
     """Build requests using the existing builders, prompts, and generation settings."""
     import pandas as pd
-    from llmbias.prompts import DATASETS
-    from llmbias.registry import functions
+    from llmbias.processing.requests.prompts import DATASETS
+    from llmbias.data.registry import functions
 
     name = dataset.split("/")[-1]
     if name not in functions:
@@ -75,7 +77,7 @@ def main():
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("list", help="List paper-scoped workflows")
     sub.add_parser("coverage", help="Show located implementations and explicit task gaps")
-    from llmbias.workflows import WORKFLOWS
+    from llmbias._workflows import WORKFLOWS
     workflow = sub.add_parser("workflow", help="Run a notebook-derived workflow with explicit JSON configuration")
     workflow.add_argument("name", choices=sorted(WORKFLOWS))
     workflow.add_argument("--config", type=Path, help="JSON object with function argument names; omit to inspect the workflow")
@@ -84,7 +86,7 @@ def main():
     create.add_argument("--dataset", required=True, help="e.g. medical_data/medbullets")
     create.add_argument("--model", default="gpt-4o")
     create.add_argument("--output-dir", required=True)
-    create.add_argument("--data-root", type=Path, default=legacy_root())
+    create.add_argument("--data-root", type=Path, default=data_root())
     run = sub.add_parser("run", help="Run a relocated script with its original CLI")
     run.add_argument("workflow", choices=COMMANDS)
     run.add_argument("args", nargs=argparse.REMAINDER, help="Original script flags after --")
@@ -95,10 +97,10 @@ def main():
         for name, spec in WORKFLOWS.items():
             print(f"{name:38} {spec.target} ({spec.source})")
     elif args.command == "coverage":
-        from llmbias.workflows import TASK_COVERAGE
+        from llmbias._workflows import TASK_COVERAGE
         print(json.dumps(TASK_COVERAGE, indent=2))
     elif args.command == "workflow":
-        from llmbias.workflows import run as run_workflow
+        from llmbias._workflows import run as run_workflow
         if args.config is None:
             spec = WORKFLOWS[args.name]
             print(f"{spec.target}\nSource: {spec.source}\n{spec.note}")
@@ -114,9 +116,6 @@ def main():
         forwarded = args.args[1:] if args.args[:1] == ["--"] else args.args
         previous_argv, previous_cwd = sys.argv, Path.cwd()
         try:
-            # The original batch builder resolves data relative to experiments/.
-            if args.workflow == "create-batch":
-                os.chdir(legacy_root() / "experiments")
             sys.argv = [COMMANDS[args.workflow], *forwarded]
             runpy.run_module(COMMANDS[args.workflow], run_name="__main__")
         finally:

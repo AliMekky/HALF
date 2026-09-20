@@ -1,0 +1,6 @@
+{
+  "gold_path": "data/processed/mental_health_data/CAMS.csv",
+  "neutral_path": "${NEUTRAL_CSV}",
+  "sensitive_path": "${SENSITIVE_CSV}",
+  "out_path": "${OUTPUT_DIR}/cams.csv"
+}

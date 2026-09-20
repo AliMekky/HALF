@@ -1,6 +1,6 @@
 {
   "result_dir": "my-study/converted-bbq",
-  "metadata_file": "my-study/additional_metadata.csv",
+  "metadata_file": "data/processed/conv_ai/bbq_additional_metadata.csv",
   "output_dir": "runs/bbq",
   "model_key": "gpt-4.1-2025-04-14"
 }

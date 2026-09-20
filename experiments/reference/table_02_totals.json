@@ -1,0 +1,37 @@
+{
+  "source": "Supplied PDF Table 2; displayed normalized values and totals, not recomputed raw metrics",
+  "totals": {
+    "claude4": {
+      "naive": 59.64,
+      "half": 59.32
+    },
+    "o4mini": {
+      "naive": 57,
+      "half": 60.2
+    },
+    "gpt41mini": {
+      "naive": 55.64,
+      "half": 57.28
+    },
+    "gpt41": {
+      "naive": 46,
+      "half": 45.24
+    },
+    "deepseek_v3": {
+      "naive": 52.91,
+      "half": 52.2
+    },
+    "llama3b": {
+      "naive": 48.45,
+      "half": 46.4
+    },
+    "llama1b": {
+      "naive": 40.91,
+      "half": 42.04
+    },
+    "llama8b": {
+      "naive": 44.64,
+      "half": 43.36
+    }
+  }
+}

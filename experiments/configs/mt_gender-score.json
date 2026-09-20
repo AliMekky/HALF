@@ -1,0 +1,5 @@
+{
+  "input_path": "${OUTPUT_DIR}/judge_responses.jsonl",
+  "gold_csv": "data/processed/translation_data/mt_gender.csv",
+  "output_path": "${OUTPUT_DIR}/scores.csv"
+}

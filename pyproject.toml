@@ -5,7 +5,9 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "llmbias-research"
 version = "0.1.0"
-description = "Behavior-preserving modular organization of the published LLMBias research workflows"
+description = "HALF: Harm-Aware LLM Fairness Evaluation Aligned with Deployment"
+readme = "README.md"
+license = {file = "LICENSE"}
 requires-python = ">=3.10"
 dependencies = ["pandas", "numpy", "scikit-learn", "scipy"]
 
@@ -14,11 +16,18 @@ providers = ["openai", "anthropic", "python-dotenv", "requests", "tqdm"]
 analysis = ["matplotlib", "seaborn", "torch"]
 datasets = ["datasets", "scikit-learn", "scikit-multilearn", "pyarrow"]
 notebooks = ["jupyterlab"]
+summarization = ["spacy[transformers]>=3,<4", "nltk", "tqdm"]
 bold = ["vaderSentiment==3.3.2"]
 bold-model = ["vaderSentiment==3.3.2", "torch", "transformers>=4.30,<5"]
 
+[project.urls]
+Paper = "https://arxiv.org/abs/2510.12217"
+
 [project.scripts]
 llmbias = "llmbias.cli:main"
+
+[tool.setuptools]
+license-files = ["LICENSE", "NOTICE", "third_party/notices/BBQ-LICENSE"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

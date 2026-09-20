@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the HALF paper."
+title: "HALF research code"
+type: software
+version: 0.1.0
+authors:
+  - family-names: Mekky
+    given-names: Ali
+  - family-names: El Herraoui
+    given-names: Omar
+  - family-names: Nakov
+    given-names: Preslav
+  - family-names: Wang
+    given-names: Yuxia
+preferred-citation:
+  type: article
+  title: "HALF: Harm-Aware LLM Fairness Evaluation Aligned with Deployment"
+  authors:
+    - family-names: Mekky
+      given-names: Ali
+    - family-names: El Herraoui
+      given-names: Omar
+    - family-names: Nakov
+      given-names: Preslav
+    - family-names: Wang
+      given-names: Yuxia
+  year: 2025
+  journal: arXiv
+  doi: 10.48550/arXiv.2510.12217
+  url: https://arxiv.org/abs/2510.12217

@@ -1,0 +1,5 @@
+{
+  "input_path": "${RESPONSES_JSONL}",
+  "dataset_path": "${PAIRED_SOURCE_JSONL}",
+  "output_path": "${OUTPUT_DIR}/summaries.jsonl"
+}

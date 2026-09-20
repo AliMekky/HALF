@@ -1,5 +1,5 @@
 {
-  "input_path": "legacy_additions/conv_ai/deepseek_chat_bold.jsonl",
+  "input_path": "runs/bold/responses/deepseek_chat_bold.jsonl",
   "output_dir": "runs/bold-original/deepseek",
   "response_format": "deepseek",
   "id_format": "short"

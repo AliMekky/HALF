@@ -1,0 +1,8 @@
+{
+  "csv_dir_paths": [
+    "${PREDICTIONS_CSV}"
+  ],
+  "output_dir": "${OUTPUT_DIR}",
+  "task": "ranking",
+  "bootstrap": 5000
+}

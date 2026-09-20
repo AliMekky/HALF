@@ -1,0 +1,1112 @@
+{
+  "signed": {
+    "matching_cells": 74,
+    "total_cells": 88,
+    "by_dataset": {
+      "medbullets": 8,
+      "medical_bias": 8,
+      "ecthr": 8,
+      "CAMS": 8,
+      "SAD": 8,
+      "djinni": 8,
+      "education_ranking": 8,
+      "mt_gender": 2,
+      "ontonotes": 8,
+      "bold": 8,
+      "bbq": 0
+    },
+    "mismatches": [
+      {
+        "model": "claude4",
+        "dataset": "mt_gender",
+        "reconstructed": 0.7139928413138575,
+        "paper": 0.7
+      },
+      {
+        "model": "claude4",
+        "dataset": "bbq",
+        "reconstructed": 0.15388468465360083,
+        "paper": 0.76
+      },
+      {
+        "model": "o4mini",
+        "dataset": "mt_gender",
+        "reconstructed": 0.826608641988761,
+        "paper": 0.81
+      },
+      {
+        "model": "o4mini",
+        "dataset": "bbq",
+        "reconstructed": 0.4359286143687979,
+        "paper": 0.55
+      },
+      {
+        "model": "gpt41mini",
+        "dataset": "bbq",
+        "reconstructed": 0.4359286143687979,
+        "paper": 0.55
+      },
+      {
+        "model": "gpt41",
+        "dataset": "mt_gender",
+        "reconstructed": 0.6553769352512374,
+        "paper": 0.64
+      },
+      {
+        "model": "gpt41",
+        "dataset": "bbq",
+        "reconstructed": 0.35819177365568267,
+        "paper": 0.6
+      },
+      {
+        "model": "deepseek_v3",
+        "dataset": "bbq",
+        "reconstructed": 0.3749864279846447,
+        "paper": 0.57
+      },
+      {
+        "model": "llama3b",
+        "dataset": "mt_gender",
+        "reconstructed": 0.343996241255068,
+        "paper": 0.36
+      },
+      {
+        "model": "llama3b",
+        "dataset": "bbq",
+        "reconstructed": 0.69195513517317,
+        "paper": 0.37
+      },
+      {
+        "model": "llama1b",
+        "dataset": "mt_gender",
+        "reconstructed": 0.3154756007620258,
+        "paper": 0.33
+      },
+      {
+        "model": "llama1b",
+        "dataset": "bbq",
+        "reconstructed": 0.8564154840113092,
+        "paper": 0.23
+      },
+      {
+        "model": "llama8b",
+        "dataset": "mt_gender",
+        "reconstructed": 0.1446790759290188,
+        "paper": 0.16
+      },
+      {
+        "model": "llama8b",
+        "dataset": "bbq",
+        "reconstructed": 0.672354570190793,
+        "paper": 0.38
+      }
+    ],
+    "parameters": {
+      "implementation": "appendix_d_reconstruction",
+      "bbq_mode": "signed",
+      "legal_policy": "Equation (4): normalize per-model mean GD, rather than average normalized attribute scores",
+      "bold_policy": "Equation (10): lower sentiment and lower toxicity receive higher normalized scores",
+      "parameters": [
+        {
+          "dataset": "medbullets",
+          "metric": "mean_abs_delta",
+          "mean": 1.3056818181818182,
+          "population_std": 0.32969863211200756,
+          "population_kind": "per_model_reduced_values",
+          "population_size": 8,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        },
+        {
+          "dataset": "medical_bias",
+          "metric": "mean_abs_delta",
+          "mean": 5.845357142857143,
+          "population_std": 3.4612782785307186,
+          "population_kind": "per_model_reduced_values",
+          "population_size": 8,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        },
+        {
+          "dataset": "CAMS",
+          "metric": "mean_abs_delta",
+          "mean": 0.9406249999999999,
+          "population_std": 0.6273004538297418,
+          "population_kind": "per_model_reduced_values",
+          "population_size": 8,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        },
+        {
+          "dataset": "SAD",
+          "metric": "mean_abs_delta",
+          "mean": 3.82765625,
+          "population_std": 5.326412974122307,
+          "population_kind": "per_model_reduced_values",
+          "population_size": 8,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        },
+        {
+          "dataset": "ecthr",
+          "metric": "mean_gd",
+          "mean": 4.066666666666666,
+          "population_std": 2.133138011891818,
+          "population_kind": "per_model_reduced_values",
+          "population_size": 8,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        },
+        {
+          "dataset": "djinni",
+          "metric": "flip_rate",
+          "mean": 18.0875,
+          "population_std": 9.822351742327292,
+          "population_kind": "per_model_reduced_values",
+          "population_size": 8,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        },
+        {
+          "dataset": "education_ranking",
+          "metric": "mean_teacher_mab",
+          "mean": 0.5275,
+          "population_std": 0.10377258790258634,
+          "population_kind": "per_model_reduced_values",
+          "population_size": 8,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        },
+        {
+          "dataset": "mt_gender",
+          "metric": "mean_language_bias",
+          "mean": 0.31371428571428567,
+          "population_std": 0.10290455256583893,
+          "population_kind": "per_model_reduced_values",
+          "population_size": 8,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        },
+        {
+          "dataset": "bbq",
+          "metric": "acc_bias",
+          "mean": -12.725000000000001,
+          "population_std": 5.529636063973831,
+          "population_kind": "per_model_reduced_values",
+          "population_size": 8,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        },
+        {
+          "dataset": "bold",
+          "metric": "sentiment",
+          "mean": 0.20375,
+          "population_std": 0.05073891504555453,
+          "population_kind": "per_model_reduced_values",
+          "population_size": 8,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        },
+        {
+          "dataset": "bold",
+          "metric": "toxicity",
+          "mean": 1.645,
+          "population_std": 0.4560427611529428,
+          "population_kind": "per_model_reduced_values",
+          "population_size": 8,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        },
+        {
+          "dataset": "ontonotes",
+          "metric": "word_list",
+          "mean": 0.048375,
+          "population_std": 0.03451788485698392,
+          "population_kind": "per_model_reduced_values",
+          "population_size": 8,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        },
+        {
+          "dataset": "ontonotes",
+          "metric": "inclusion",
+          "mean": 0.035125,
+          "population_std": 0.025531536871093365,
+          "population_kind": "per_model_reduced_values",
+          "population_size": 8,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        },
+        {
+          "dataset": "ontonotes",
+          "metric": "hallucination",
+          "mean": 0.373375,
+          "population_std": 0.07740629415622478,
+          "population_kind": "per_model_reduced_values",
+          "population_size": 8,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        }
+      ]
+    },
+    "evidence_limit": "Inputs transcribed from rounded paper tables, not newly regenerated raw predictions."
+  },
+  "absolute": {
+    "matching_cells": 74,
+    "total_cells": 88,
+    "by_dataset": {
+      "medbullets": 8,
+      "medical_bias": 8,
+      "ecthr": 8,
+      "CAMS": 8,
+      "SAD": 8,
+      "djinni": 8,
+      "education_ranking": 8,
+      "mt_gender": 2,
+      "ontonotes": 8,
+      "bold": 8,
+      "bbq": 0
+    },
+    "mismatches": [
+      {
+        "model": "claude4",
+        "dataset": "mt_gender",
+        "reconstructed": 0.7139928413138575,
+        "paper": 0.7
+      },
+      {
+        "model": "claude4",
+        "dataset": "bbq",
+        "reconstructed": 0.8461153153463992,
+        "paper": 0.76
+      },
+      {
+        "model": "o4mini",
+        "dataset": "mt_gender",
+        "reconstructed": 0.826608641988761,
+        "paper": 0.81
+      },
+      {
+        "model": "o4mini",
+        "dataset": "bbq",
+        "reconstructed": 0.5640713856312021,
+        "paper": 0.55
+      },
+      {
+        "model": "gpt41mini",
+        "dataset": "bbq",
+        "reconstructed": 0.5640713856312021,
+        "paper": 0.55
+      },
+      {
+        "model": "gpt41",
+        "dataset": "mt_gender",
+        "reconstructed": 0.6553769352512374,
+        "paper": 0.64
+      },
+      {
+        "model": "gpt41",
+        "dataset": "bbq",
+        "reconstructed": 0.6418082263443173,
+        "paper": 0.6
+      },
+      {
+        "model": "deepseek_v3",
+        "dataset": "bbq",
+        "reconstructed": 0.6250135720153553,
+        "paper": 0.57
+      },
+      {
+        "model": "llama3b",
+        "dataset": "mt_gender",
+        "reconstructed": 0.343996241255068,
+        "paper": 0.36
+      },
+      {
+        "model": "llama3b",
+        "dataset": "bbq",
+        "reconstructed": 0.30804486482683,
+        "paper": 0.37
+      },
+      {
+        "model": "llama1b",
+        "dataset": "mt_gender",
+        "reconstructed": 0.3154756007620258,
+        "paper": 0.33
+      },
+      {
+        "model": "llama1b",
+        "dataset": "bbq",
+        "reconstructed": 0.14358451598869082,
+        "paper": 0.23
+      },
+      {
+        "model": "llama8b",
+        "dataset": "mt_gender",
+        "reconstructed": 0.1446790759290188,
+        "paper": 0.16
+      },
+      {
+        "model": "llama8b",
+        "dataset": "bbq",
+        "reconstructed": 0.327645429809207,
+        "paper": 0.38
+      }
+    ],
+    "parameters": {
+      "implementation": "appendix_d_reconstruction",
+      "bbq_mode": "absolute",
+      "legal_policy": "Equation (4): normalize per-model mean GD, rather than average normalized attribute scores",
+      "bold_policy": "Equation (10): lower sentiment and lower toxicity receive higher normalized scores",
+      "parameters": [
+        {
+          "dataset": "medbullets",
+          "metric": "mean_abs_delta",
+          "mean": 1.3056818181818182,
+          "population_std": 0.32969863211200756,
+          "population_kind": "per_model_reduced_values",
+          "population_size": 8,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        },
+        {
+          "dataset": "medical_bias",
+          "metric": "mean_abs_delta",
+          "mean": 5.845357142857143,
+          "population_std": 3.4612782785307186,
+          "population_kind": "per_model_reduced_values",
+          "population_size": 8,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        },
+        {
+          "dataset": "CAMS",
+          "metric": "mean_abs_delta",
+          "mean": 0.9406249999999999,
+          "population_std": 0.6273004538297418,
+          "population_kind": "per_model_reduced_values",
+          "population_size": 8,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        },
+        {
+          "dataset": "SAD",
+          "metric": "mean_abs_delta",
+          "mean": 3.82765625,
+          "population_std": 5.326412974122307,
+          "population_kind": "per_model_reduced_values",
+          "population_size": 8,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        },
+        {
+          "dataset": "ecthr",
+          "metric": "mean_gd",
+          "mean": 4.066666666666666,
+          "population_std": 2.133138011891818,
+          "population_kind": "per_model_reduced_values",
+          "population_size": 8,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        },
+        {
+          "dataset": "djinni",
+          "metric": "flip_rate",
+          "mean": 18.0875,
+          "population_std": 9.822351742327292,
+          "population_kind": "per_model_reduced_values",
+          "population_size": 8,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        },
+        {
+          "dataset": "education_ranking",
+          "metric": "mean_teacher_mab",
+          "mean": 0.5275,
+          "population_std": 0.10377258790258634,
+          "population_kind": "per_model_reduced_values",
+          "population_size": 8,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        },
+        {
+          "dataset": "mt_gender",
+          "metric": "mean_language_bias",
+          "mean": 0.31371428571428567,
+          "population_std": 0.10290455256583893,
+          "population_kind": "per_model_reduced_values",
+          "population_size": 8,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        },
+        {
+          "dataset": "bbq",
+          "metric": "acc_bias",
+          "mean": 12.725000000000001,
+          "population_std": 5.529636063973831,
+          "population_kind": "per_model_reduced_values",
+          "population_size": 8,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        },
+        {
+          "dataset": "bold",
+          "metric": "sentiment",
+          "mean": 0.20375,
+          "population_std": 0.05073891504555453,
+          "population_kind": "per_model_reduced_values",
+          "population_size": 8,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        },
+        {
+          "dataset": "bold",
+          "metric": "toxicity",
+          "mean": 1.645,
+          "population_std": 0.4560427611529428,
+          "population_kind": "per_model_reduced_values",
+          "population_size": 8,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        },
+        {
+          "dataset": "ontonotes",
+          "metric": "word_list",
+          "mean": 0.048375,
+          "population_std": 0.03451788485698392,
+          "population_kind": "per_model_reduced_values",
+          "population_size": 8,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        },
+        {
+          "dataset": "ontonotes",
+          "metric": "inclusion",
+          "mean": 0.035125,
+          "population_std": 0.025531536871093365,
+          "population_kind": "per_model_reduced_values",
+          "population_size": 8,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        },
+        {
+          "dataset": "ontonotes",
+          "metric": "hallucination",
+          "mean": 0.373375,
+          "population_std": 0.07740629415622478,
+          "population_kind": "per_model_reduced_values",
+          "population_size": 8,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        }
+      ]
+    },
+    "evidence_limit": "Inputs transcribed from rounded paper tables, not newly regenerated raw predictions."
+  },
+  "pooled_absolute": {
+    "matching_cells": 85,
+    "total_cells": 88,
+    "by_dataset": {
+      "medbullets": 8,
+      "medical_bias": 8,
+      "ecthr": 8,
+      "CAMS": 8,
+      "SAD": 8,
+      "djinni": 8,
+      "education_ranking": 8,
+      "mt_gender": 8,
+      "ontonotes": 8,
+      "bold": 8,
+      "bbq": 5
+    },
+    "mismatches": [
+      {
+        "model": "o4mini",
+        "dataset": "bbq",
+        "reconstructed": 0.5413434692790403,
+        "paper": 0.55
+      },
+      {
+        "model": "gpt41mini",
+        "dataset": "bbq",
+        "reconstructed": 0.5407919312372521,
+        "paper": 0.55
+      },
+      {
+        "model": "deepseek_v3",
+        "dataset": "bbq",
+        "reconstructed": 0.5957688752892031,
+        "paper": 0.57
+      }
+    ],
+    "parameters": {
+      "implementation": "appendix_d_reconstruction",
+      "bbq_mode": "absolute",
+      "legal_policy": "Equation (4): normalize per-model mean GD, rather than average normalized attribute scores",
+      "bold_policy": "Equation (10): lower sentiment and lower toxicity receive higher normalized scores",
+      "parameters": [
+        {
+          "dataset": "medbullets",
+          "metric": "mean_abs_delta",
+          "mean": 1.3056818181818182,
+          "population_std": 0.32969863211200756,
+          "population_kind": "per_model_reduced_values",
+          "population_size": 8,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        },
+        {
+          "dataset": "medical_bias",
+          "metric": "mean_abs_delta",
+          "mean": 5.845357142857143,
+          "population_std": 3.4612782785307186,
+          "population_kind": "per_model_reduced_values",
+          "population_size": 8,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        },
+        {
+          "dataset": "CAMS",
+          "metric": "mean_abs_delta",
+          "mean": 0.9406249999999999,
+          "population_std": 0.6273004538297418,
+          "population_kind": "per_model_reduced_values",
+          "population_size": 8,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        },
+        {
+          "dataset": "SAD",
+          "metric": "mean_abs_delta",
+          "mean": 3.82765625,
+          "population_std": 5.326412974122307,
+          "population_kind": "per_model_reduced_values",
+          "population_size": 8,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        },
+        {
+          "dataset": "ecthr",
+          "metric": "mean_gd",
+          "mean": 4.066666666666666,
+          "population_std": 2.133138011891818,
+          "population_kind": "per_model_reduced_values",
+          "population_size": 8,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        },
+        {
+          "dataset": "djinni",
+          "metric": "flip_rate",
+          "mean": 18.0875,
+          "population_std": 9.822351742327292,
+          "population_kind": "per_model_reduced_values",
+          "population_size": 8,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        },
+        {
+          "dataset": "education_ranking",
+          "metric": "mean_teacher_mab",
+          "mean": 0.5275,
+          "population_std": 0.10377258790258634,
+          "population_kind": "per_model_reduced_values",
+          "population_size": 8,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        },
+        {
+          "dataset": "bold",
+          "metric": "sentiment",
+          "mean": 0.20375,
+          "population_std": 0.05073891504555453,
+          "population_kind": "per_model_reduced_values",
+          "population_size": 8,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        },
+        {
+          "dataset": "bold",
+          "metric": "toxicity",
+          "mean": 1.645,
+          "population_std": 0.4560427611529428,
+          "population_kind": "per_model_reduced_values",
+          "population_size": 8,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        },
+        {
+          "dataset": "ontonotes",
+          "metric": "word_list",
+          "mean": 0.048375,
+          "population_std": 0.03451788485698392,
+          "population_kind": "per_model_reduced_values",
+          "population_size": 8,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        },
+        {
+          "dataset": "ontonotes",
+          "metric": "inclusion",
+          "mean": 0.035125,
+          "population_std": 0.025531536871093365,
+          "population_kind": "per_model_reduced_values",
+          "population_size": 8,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        },
+        {
+          "dataset": "ontonotes",
+          "metric": "hallucination",
+          "mean": 0.373375,
+          "population_std": 0.07740629415622478,
+          "population_kind": "per_model_reduced_values",
+          "population_size": 8,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        },
+        {
+          "dataset": "bbq",
+          "metric": "acc_bias",
+          "mean": 12.638636363636362,
+          "population_std": 8.185816889015774,
+          "population_kind": "pooled_model_by_group_values_explicit_alternative",
+          "population_size": 88,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        },
+        {
+          "dataset": "mt_gender",
+          "metric": "mean_language_bias",
+          "mean": 0.3137142857142857,
+          "population_std": 0.11225460765053483,
+          "population_kind": "pooled_model_by_group_values_explicit_alternative",
+          "population_size": 56,
+          "direction": -1,
+          "models": [
+            "claude4",
+            "o4mini",
+            "gpt41mini",
+            "gpt41",
+            "deepseek_v3",
+            "llama3b",
+            "llama1b",
+            "llama8b"
+          ],
+          "zero_variance_policy": "error"
+        }
+      ]
+    },
+    "evidence_limit": "Inputs transcribed from rounded paper tables, not newly regenerated raw predictions."
+  }
+}

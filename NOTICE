@@ -1,0 +1,12 @@
+HALF research code
+Original project code is distributed under the MIT license in LICENSE.
+
+The adapted BBQ scorer (src/llmbias/evaluation/conversational/bbq.py) and its
+reference fixture originate from https://github.com/nyu-mll/BBQ and retain the
+CC BY 4.0 terms in third_party/notices/BBQ-LICENSE. Changes adapt file boundaries
+and input/output paths for this package.
+
+SummaryBias is fetched separately by scripts/setup_summary_bias.py from
+https://github.com/julmaxi/summary_bias at the revision recorded in that script.
+It is not included in the source distribution. Dataset and external model
+licenses are separate from the license on this project's original code.

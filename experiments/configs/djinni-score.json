@@ -1,0 +1,5 @@
+{
+  "neutral_csv": "${NEUTRAL_CSV}",
+  "sensitive_csv": "${SENSITIVE_CSV}",
+  "model_name": "${MODEL_TAG}"
+}
