@@ -4,7 +4,7 @@ import os
 import pandas as pd
 
 DATA_DIR = "fairlex_samples"
-DATASETS = ["ecthr", "scotus", "fscs", "cail"]
+DATASETS = ["ecthr"]
 
 
 def load_sampled_dataset(dataset_name):
@@ -29,4 +29,3 @@ def load_all_datasets():
 
 if __name__ == "__main__":
     datasets = load_all_datasets()
-    print(datasets['cail']['text'][0])

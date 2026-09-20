@@ -1,5 +1,4 @@
 """File inputs and output handling for the domain evaluation."""
-from pathlib import Path
 
 def evaluate_recruitment(neutral_csv, sensitive_csv, model_name):
     import pandas as pd

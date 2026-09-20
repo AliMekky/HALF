@@ -16,7 +16,6 @@ def create_translation_template(df, model, dataset, base_template_dic):
         "de": "German"
     }
 
-    # langs = ["ar", "uk", "ru", "it", "fr", "es", "de"]
 
     batch_result = []
 

@@ -1,4 +1,4 @@
-"""Functions extracted from notebook cell 306 (zero-based); legacy globals may be required."""
+"""Functions extracted from notebook cell 306 (zero-based). Preserved evaluation logic."""
 import pandas as pd
 from pathlib import Path
 from llmbias.data.paths import runs_root

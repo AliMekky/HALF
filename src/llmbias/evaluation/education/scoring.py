@@ -1,4 +1,4 @@
-"""Functions extracted from notebook cell 367 (zero-based); legacy globals may be required."""
+"""Functions extracted from notebook cell 367 (zero-based). Preserved evaluation logic."""
 import os
 import pandas as pd
 import numpy as np

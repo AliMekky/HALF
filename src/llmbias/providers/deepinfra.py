@@ -41,13 +41,9 @@ def run_batch(input_path: Path, output_path: Path, model: str):
     )
 
     with open(input_path, "r", encoding="utf-8") as infile, open(output_path, "w", encoding="utf-8") as outfile:
-        # i = 0
         for line in tqdm(infile, desc="Processing batch"):
             item = json.loads(line)
-            # i += 1
             # Extract necessary fields
-            # if i == 10:
-            #     break
             req_id = item.get("id", f"batch_req_{uuid.uuid4().hex}")
             custom_id = item.get("custom_id")
             messages = item['body']['messages']

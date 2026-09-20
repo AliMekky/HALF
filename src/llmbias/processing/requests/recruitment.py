@@ -17,7 +17,6 @@ def create_djinni_template(df, model, dataset, base_template_dic):
         neutral_template['body']['messages'][1]['content'] = DATASETS[dataset]['zero_shot_prompt'].format(resume = df.iloc[i]['cv_text'], job_description = df.iloc[i]['job_description'])
         batch_result_neutral.append(neutral_template)
         for combination in RECRUITMENT_COMBINATIONS:
-            # combination = combination.replace('minor', 'young adult')
             random_name = random.choice(COMBINATION_NAMES[combination])
             temp = string.format(name='', combination=combination)
             temp_template = copy.deepcopy(base_template_dic)

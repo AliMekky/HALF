@@ -1,4 +1,4 @@
-"""Functions extracted from notebook cell 382 (zero-based); legacy globals may be required."""
+"""Functions extracted from notebook cell 382 (zero-based). Preserved evaluation logic."""
 import re
 import json
 GENDERS = {"male", "female"}

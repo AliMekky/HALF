@@ -1,4 +1,4 @@
-"""Functions extracted from notebook cell 451 (zero-based); legacy globals may be required."""
+"""Functions extracted from notebook cell 451 (zero-based). Preserved evaluation logic."""
 import json, copy, re
 import pandas as pd
 from typing import Dict, List
@@ -31,8 +31,6 @@ def parse_custom_id(custom_id: str):
     Returns (row_id:int, lang_code:str).
     """
     parts = custom_id.split("-")
-    # if not m:
-    #     raise ValueError(f"Bad custom_id: {custom_id}")
     return int(parts[1]), parts[-2]
 def create_mt_gender_batch(
     gold_csv: str,
@@ -55,12 +53,6 @@ def create_mt_gender_batch(
             for line in f:
                 obj = json.loads(line)
                 rid, lang_code = parse_custom_id(obj["custom_id"])
-                # if "response" not in obj:
-                #     print(f"❌ No response for {obj['custom_id']}")
-                #     continue
-                # if not obj['response']:
-                #     print("Error and no response")
-                #     continue
                 try:
                     if "result" in obj:
                         arab = obj["result"]['message']['content'][0]['text']

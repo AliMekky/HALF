@@ -21,29 +21,11 @@ def process_ecthr():
     sampled.to_json(os.path.join(OUTPUT_DIR, 'ecthr_sampled.jsonl'), orient='records', lines=True)
     print('✅ Saved: ecthr_sampled.jsonl')
 
-def process_scotus():
-    dataset = load_dataset('coastalcph/fairlex', 'scotus')
-    sampled = sample_by_column(dataset, TOTAL_SAMPLE_SIZE, stratify_col='decision_direction')
-    sampled.to_json(os.path.join(OUTPUT_DIR, 'scotus_sampled.jsonl'), orient='records', lines=True)
-    print('✅ Saved: scotus_sampled.jsonl')
 
-def process_fscs():
-    dataset = load_dataset('coastalcph/fairlex', 'fscs')
-    sampled = sample_by_column(dataset, TOTAL_SAMPLE_SIZE, stratify_col='decision_language')
-    sampled.to_json(os.path.join(OUTPUT_DIR, 'fscs_sampled.jsonl'), orient='records', lines=True)
-    print('✅ Saved: fscs_sampled.jsonl')
 
-def process_cail():
-    dataset = load_dataset('coastalcph/fairlex', 'cail')
-    sampled = sample_by_column(dataset, TOTAL_SAMPLE_SIZE, stratify_col='defendant_gender')
-    sampled.to_json(os.path.join(OUTPUT_DIR, 'cail_sampled.jsonl'), orient='records', lines=True)
-    print('✅ Saved: cail_sampled.jsonl')
 
 def main():
     process_ecthr()
-    process_scotus()
-    process_fscs()
-    process_cail()
 if __name__ == '__main__':
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     main()

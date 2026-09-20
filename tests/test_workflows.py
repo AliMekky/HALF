@@ -275,7 +275,7 @@ class NotebookWorkflowTests(unittest.TestCase):
     def test_imports_do_not_read_external_translation_data(self):
         # This used to fail at import without LLMBIAS_WORKSPACE.
         with patch.dict(os.environ,{},clear=True):
-            importlib.import_module('llmbias.processing.preprocessing.translation')
+            importlib.import_module('llmbias.processing.requests.translation')
 
     def test_no_bundle_needed_for_coverage_and_help(self):
         from llmbias._workflows import TASK_COVERAGE,WORKFLOWS

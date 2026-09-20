@@ -1,4 +1,4 @@
-"""Functions extracted from notebook cell 338 (zero-based); legacy globals may be required."""
+"""Functions extracted from notebook cell 338 (zero-based). Preserved evaluation logic."""
 import argparse
 from pathlib import Path
 import pandas as pd

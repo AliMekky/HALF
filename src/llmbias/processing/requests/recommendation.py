@@ -19,7 +19,6 @@ def create_rec_system_template(df, model, dataset, base_template_dic):
         batch_result_neutral.append(neutral_template)
 
         for combination in COMBINATIONS:
-            # anchor_type = df.iloc[i]['anchor_type']
             temp_template = copy.deepcopy(base_template_dic)
             combination_id = combination.replace(' ', '-')
             temp_template['custom_id'] = f"request-{i}-{model}-{dataset}-{anchor_type}-{combination_id}"
