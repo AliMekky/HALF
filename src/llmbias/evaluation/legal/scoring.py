@@ -96,4 +96,3 @@ if __name__ == "__main__":
         json.dump(table, f, indent=2)
 
     print(f"\n✓ Saved: {args.prefix}_fairness_table.csv / .json")
-
