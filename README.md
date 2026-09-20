@@ -89,10 +89,3 @@ src/llmbias/
 ├── evaluation/                # Domain metrics, normalization and table assembly
 └── cli.py                     # CLI entry point
 ```
-
-## Tests
-
-```sh
-python -m unittest discover -s tests -q
-python scripts/smoke_test.py
-```

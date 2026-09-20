@@ -2,11 +2,9 @@ include README.md LICENSE NOTICE CITATION.cff
 recursive-include requirements *.txt
 recursive-include scripts *.py *.patch
 recursive-include examples *.json
-recursive-include tests *.py *.json *.txt *.csv
 include data/datasets-manifest.json
 recursive-include data/processed *.csv *.jsonl *.txt
 recursive-include third_party/notices *
 prune runs
 prune third_party/summary_bias
 global-exclude __pycache__ *.py[cod] .DS_Store
-include .github/workflows/tests.yml
