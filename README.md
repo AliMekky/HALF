@@ -48,13 +48,11 @@ llmbias run evaluate-medical -- \
   --gt data/processed/medical_data/medbullets.csv --model_tag medbullets
 ```
 
-For other tasks, edit paths and replace `${PLACEHOLDER}` values in an
-[example configuration](examples/), then run the corresponding workflow:
+For configured workflows, supply a JSON file whose keys match the function's
+arguments and whose values specify your input/output paths:
 
 ```sh
-llmbias workflow parse-cams-openai --config examples/cams-parsing.json
-llmbias workflow evaluate-cams --config examples/cams-score.json
-llmbias workflow evaluate-bold --config examples/bold-evaluation.json
+llmbias workflow evaluate-cams --config runs/cams.json
 ```
 
 List workflows or inspect standalone command arguments:

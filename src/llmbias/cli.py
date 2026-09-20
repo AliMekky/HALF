@@ -104,7 +104,7 @@ def main():
         if args.config is None:
             spec = WORKFLOWS[args.name]
             print(f"{spec.target}\nSource: {spec.source}\n{spec.note}")
-            print("Supply --config with a JSON object of keyword arguments; see examples/.")
+            print("Supply --config with a JSON object matching the function arguments.")
         else:
             configuration = json.loads(args.config.read_text())
             if not isinstance(configuration, dict):

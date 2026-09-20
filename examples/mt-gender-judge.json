@@ -1,5 +1,0 @@
-{
-  "gold_csv": "data/processed/translation_data/mt_gender.csv",
-  "translations_jsonl": "${TRANSLATIONS_JSONL}",
-  "output_path": "${OUTPUT_DIR}/judge_requests.jsonl"
-}

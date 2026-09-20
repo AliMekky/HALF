@@ -1,7 +1,0 @@
-{
-  "gold_csv": "data/processed/mental_health_data/SAD.csv",
-  "neutral_csv": "${NEUTRAL_CSV}",
-  "sensitive_csv": "${SENSITIVE_CSV}",
-  "model_name": "${MODEL_TAG}",
-  "output_csv_path": "${OUTPUT_DIR}/sad.csv"
-}

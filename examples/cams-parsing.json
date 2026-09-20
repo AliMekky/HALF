@@ -1,4 +1,0 @@
-{
-  "input_path": "my-study/openai-cams.jsonl",
-  "output_csv_path": "runs/cams/parsed.csv"
-}

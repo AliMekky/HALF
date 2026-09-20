@@ -1,5 +1,0 @@
-{
-  "responses_csv": "${PREDICTIONS_CSV}",
-  "batches_path": "${BATCH_JSONL}",
-  "gold_path": "data/processed/medical_data/medical_bias_gt.jsonl"
-}
