@@ -10,3 +10,12 @@ SummaryBias is fetched separately by scripts/setup_summary_bias.py from
 https://github.com/julmaxi/summary_bias at the revision recorded in that script.
 It is not included in the source distribution. Dataset and external model
 licenses are separate from the license on this project's original code.
+
+Datasets keep their original licences, which are listed in data/README.md.
+Files included under data/processed/ are redistributed under those terms:
+BBQ (CC BY 4.0), BOLD (CC BY-SA 4.0), FairLex/ECtHR (CC BY-NC-SA 4.0,
+non-commercial), SAD, WinoMT, Djinni, MedQA and the Weissburg et al. education
+data (MIT), and CAMS (free for research use under its terms of use).
+MedBullets and BiasMedQA are shared for research reproducibility; their source
+repositories state no licence. MovieLens and OntoNotes are not redistributed;
+see scripts/restore_data.py.

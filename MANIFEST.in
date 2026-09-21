@@ -3,6 +3,11 @@ recursive-include requirements *.txt
 recursive-include scripts *.py *.patch
 include data/datasets-manifest.json
 recursive-include data/processed *.csv *.jsonl *.txt
+include data/README.md
+recursive-include data/annotations *.csv
+# Rebuilt locally from licensed sources; never package
+exclude data/processed/recommendation_system/movielens.csv
+recursive-exclude data/processed/summarization_data *
 recursive-include third_party/notices *
 prune runs
 prune third_party/summary_bias

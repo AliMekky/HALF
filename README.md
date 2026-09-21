@@ -15,23 +15,27 @@ using the variable names in [.env.example](.env.example).
 
 ## Data
 
-Datasets and supporting files are included in `data/processed/`.
+Ten of the 12 datasets are included in `data/processed/`. MovieLens and OntoNotes
+are not redistributed because of their licences. Rebuild them from the original
+sources with `scripts/restore_data.py`, following [data/README.md](data/README.md),
+which also lists each dataset's source and licence.
+
 Use these dataset keys with `llmbias build --dataset`:
 
-| Dataset | Key |
-| --- | --- |
-| MedBullets | `medical_data/medbullets` |
-| BiasMedQA | `medical_data/medical_bias` |
-| CAMS | `mental_health_data/CAMS` |
-| SAD | `mental_health_data/SAD` |
-| Djinni | `admission_data/djinni` |
-| Education | `education_data/education_ranking` |
-| MovieLens | `recommendation_system/movielens` |
-| ECtHR | `legal_data/ecthr` |
-| WinoMT | `translation_data/mt_gender` |
-| OntoNotes | `summarization_data/ontonotes` |
-| BBQ | `conv_ai/bbq` |
-| BOLD | `conv_ai/bold` |
+| Dataset | Key | Included |
+| --- | --- | --- |
+| MedBullets | `medical_data/medbullets` | Yes |
+| BiasMedQA | `medical_data/medical_bias` | Yes |
+| CAMS | `mental_health_data/CAMS` | Yes |
+| SAD | `mental_health_data/SAD` | Yes |
+| Djinni | `admission_data/djinni` | Yes |
+| Education | `education_data/education_ranking` | Yes |
+| MovieLens | `recommendation_system/movielens` | Rebuild |
+| ECtHR | `legal_data/ecthr` | Yes (CC BY-NC-SA 4.0) |
+| WinoMT | `translation_data/mt_gender` | Yes |
+| OntoNotes | `summarization_data/ontonotes` | Rebuild |
+| BBQ | `conv_ai/bbq` | Yes |
+| BOLD | `conv_ai/bold` | Yes |
 
 ## Run
 

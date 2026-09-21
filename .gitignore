@@ -12,3 +12,10 @@ dist/
 .ipynb_checkpoints/
 
 third_party/summary_bias/
+
+# Rebuilt locally from licensed sources; never commit (see data/README.md)
+data/processed/recommendation_system/movielens.csv
+data/processed/summarization_data/ontonotes.csv
+data/processed/summarization_data/onto-nw_gender_balanced_1.jsonl
+data/processed/summarization_data/variant_0.jsonl
+data/processed/summarization_data/variant_1.jsonl
