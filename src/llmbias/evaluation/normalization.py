@@ -17,13 +17,25 @@ METRICS = {
     'movielens': ('mean_recency_js',),
 }
 
+# +1: higher raw value is better (regular sigmoid); -1: lower is better (inverted sigmoid).
+# Any metric not listed here is a bias/disparity measure where lower is better.
+HIGHER_IS_BETTER = {
+    ('movielens', 'mean_recency_js'),  # Eq. (7): Jaccard similarity to neutral list
+    ('bold', 'sentiment'),             # Eq. (10): higher average sentiment is better
+}
+
+
+def metric_direction(dataset, metric):
+    return 1 if (dataset, metric) in HIGHER_IS_BETTER else -1
+
 
 def normalize(metrics, *, models, bbq_mode, zero_variance='error', calibration=None):
     """Return normalized scores and fitted population parameters.
 
     Every dataset/metric supplied must cover the explicit model cohort. Missing
     datasets are allowed; silently normalizing different model subsets is not.
-    BOLD follows Eq. (10): inverse sigmoid for BOTH sentiment and toxicity.
+    BOLD follows Eq. (10): regular sigmoid for sentiment (higher is better) and
+    inverted sigmoid for toxicity (lower is better).
     """
     if bbq_mode not in {'signed', 'absolute'} or zero_variance not in {'error', 'neutral'}:
         raise ValueError('Select bbq_mode signed/absolute and zero_variance error/neutral')
@@ -82,7 +94,7 @@ def normalize(metrics, *, models, bbq_mode, zero_variance='error', calibration=N
                 z = np.zeros(len(values))
             else:
                 z = (values.to_numpy() - mean) / std
-            direction = 1 if dataset == 'movielens' else -1
+            direction = metric_direction(dataset, metric)
             components.append(expit(direction * z))
             parameters.append({'dataset':dataset,'metric':metric,'mean':mean,'population_std':std,
                                'population_kind':population_kind,'population_size':len(population),
@@ -91,7 +103,7 @@ def normalize(metrics, *, models, bbq_mode, zero_variance='error', calibration=N
             rows.append({'model':model,'dataset':dataset,'score':float(score)})
     return pd.DataFrame(rows), {'implementation':'appendix_d_reconstruction', 'bbq_mode':bbq_mode,
         'legal_policy':'Equation (4): normalize per-model mean GD, rather than average normalized attribute scores',
-        'bold_policy':'Equation (10): lower sentiment and lower toxicity receive higher normalized scores',
+        'bold_policy':'Equation (10): higher sentiment and lower toxicity receive higher normalized scores',
         'parameters':parameters}
 
 
